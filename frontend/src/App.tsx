@@ -5,7 +5,7 @@ import './styles/index.scss'
 function App() {
 	return (
 		<ThemeProvider>
-			<div>
+			<div className='dark'>
 				<AppRouter />
 			</div>
 		</ThemeProvider>

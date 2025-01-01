@@ -11,6 +11,7 @@ module.exports = {
 				secondary: 'var(--secondary)',
 				background: 'var(--background)',
 				text: 'var(--text)',
+				secondaryText: 'var(--secondary-text)',
 			},
 		},
 	},
