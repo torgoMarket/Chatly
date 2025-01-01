@@ -1,0 +1,11 @@
+.field {
+	@apply relative w-full flex flex-col gap-2;
+}
+
+.label {
+	@apply text-text text-sm absolute -top-2 left-2 px-2 bg-secondary rounded-xl;
+}
+
+.error {
+	@apply text-red-600 text-sm;
+}
