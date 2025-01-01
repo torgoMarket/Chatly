@@ -4,7 +4,7 @@ import styles from './Button.module.scss'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 	children: React.ReactNode
-	size: 'sm' | 'md' | 'lg'
+	size?: 'sm' | 'md' | 'lg'
 }
 
 export const Button: React.FC<ButtonProps> = ({

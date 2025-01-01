@@ -1,0 +1,15 @@
+.input {
+	@apply max-w-40 h-10 border border-secondary rounded-md px-2 focus:outline-none focus:border-primary text-lg;
+}
+
+.sm {
+	@apply max-w-32 h-8;
+}
+
+.md {
+	@apply max-w-48 h-10;
+}
+
+.lg {
+	@apply max-w-60 h-12;
+}
