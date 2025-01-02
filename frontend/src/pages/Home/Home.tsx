@@ -1,20 +1,26 @@
 import { Link } from 'react-router-dom'
-import { useTheme } from '../../context/ThemeContext'
-
-type Theme = 'light' | 'dark'
-
+import homePhoto from '../../assets/images/homeImage.png'
+import styles from './Home.module.scss'
 export const Home = () => {
-	const { setTheme } = useTheme()
 	return (
-		<>
-			<select
-				onChange={e => setTheme(e.target.value as Theme)}
-				className='text-black'
-			>
-				<option value='light'>Light</option>
-				<option value='dark'>Dark</option>
-			</select>
-			<Link to='/login'>Login</Link>
-		</>
+		<div className={styles.home}>
+			<div className={styles.info}>
+				<h2>
+					Your Voice <br /> Your Community
+				</h2>
+				<p>
+					<span className={styles.firstWord}>Chatly</span> is a sleek app for
+					seamless chatting and voice calls. Connect effortlessly with loved
+					ones or new friends worldwide. Experience clear, personal, and
+					meaningful communication anytime.
+				</p>
+				<Link className={styles.link} to='/login'>
+					Start Messaging
+				</Link>
+			</div>
+			<div className={styles.image}>
+				<img src={homePhoto} alt='Home Photo' />
+			</div>
+		</div>
 	)
 }
