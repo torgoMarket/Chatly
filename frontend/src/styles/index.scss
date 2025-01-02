@@ -6,6 +6,6 @@
 
 @import './variables.scss';
 
-body {
-	@apply font-sans bg-background;
+.app {
+	@apply min-h-screen w-full h-full font-sans bg-background;
 }

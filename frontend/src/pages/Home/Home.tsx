@@ -1,14 +1,20 @@
-import clsx from 'clsx'
 import { Link } from 'react-router-dom'
-import styles from './Home.module.scss'
+import { useTheme } from '../../context/ThemeContext'
+
+type Theme = 'light' | 'dark'
+
 export const Home = () => {
-	// const { isDarkMode, toggleDarkMode } = useTheme()
+	const { setTheme } = useTheme()
 	return (
-		<div className={clsx('m-48 text-lg font-bold', styles.div)}>
-			{/* <button onClick={toggleDarkMode}>
-				Toggle {isDarkMode ? 'Light' : 'Dark'} Mode
-			</button> */}
+		<>
+			<select
+				onChange={e => setTheme(e.target.value as Theme)}
+				className='text-black'
+			>
+				<option value='light'>Light</option>
+				<option value='dark'>Dark</option>
+			</select>
 			<Link to='/login'>Login</Link>
-		</div>
+		</>
 	)
 }
