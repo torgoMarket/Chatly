@@ -7,6 +7,7 @@ export const Login = () => {
 	return (
 		<div className={styles.login}>
 			<Form>
+				<h3>Login</h3>
 				<Field label='email'></Field>
 				<Field label='password'></Field>
 				<Button>Login</Button>

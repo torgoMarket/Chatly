@@ -19,6 +19,7 @@ export const Recover = () => {
 	return (
 		<div className={styles.recover}>
 			<Form>
+				<h3>Recover Password</h3>
 				{stage === 0 && <Field label='email'></Field>}
 
 				{stage === 1 && (

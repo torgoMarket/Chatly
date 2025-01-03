@@ -7,6 +7,7 @@ export const Register = () => {
 	return (
 		<div className={styles.register}>
 			<Form>
+				<h3>Register</h3>
 				<Field label='email'></Field>
 				<Field label='password'></Field>
 				<Field label='repeat password'></Field>
