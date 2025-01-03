@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from 'react'
+import {
+	createContext,
+	ReactNode,
+	useContext,
+	useEffect,
+	useState,
+} from 'react'
 
 type Theme = 'light' | 'dark'
 
@@ -11,6 +17,20 @@ const ThemeContext = createContext<ThemeContextProps | undefined>(undefined)
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 	const [theme, setThemeState] = useState<Theme>('light')
+
+	useEffect(() => {
+		console.log(window.matchMedia('(prefers-color-scheme: l)'))
+		const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
+			.matches
+			? 'dark'
+			: 'light'
+		setThemeState(systemTheme)
+
+		const storedTheme = localStorage.getItem('theme') as Theme
+		if (storedTheme) {
+			setThemeState(storedTheme)
+		}
+	}, [])
 
 	const setTheme = (newTheme: Theme) => {
 		setThemeState(newTheme)
