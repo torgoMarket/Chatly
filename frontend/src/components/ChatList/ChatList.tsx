@@ -64,6 +64,62 @@ export const ChatList = () => {
 				time='14:44'
 				checked={true}
 			/>
+			<ChatItem
+				avatar={avatar1}
+				name='Amir'
+				message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, quod.'
+				time='14:44'
+				checked={true}
+			/>
+			<ChatItem
+				avatar={avatar2}
+				name='Amir Amir Amir'
+				message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, quod.'
+				time='14:44'
+				checked={true}
+			/>
+			<ChatItem
+				avatar={avatar3}
+				name='Amir'
+				message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, quod.'
+				time='14:44'
+				checked={true}
+			/>
+			<ChatItem
+				avatar={avatar4}
+				name='Amir'
+				message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, quod.'
+				time='14:44'
+				checked={true}
+			/>
+			<ChatItem
+				avatar={avatar1}
+				name='Amir'
+				message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, quod.'
+				time='14:44'
+				checked={true}
+			/>
+			<ChatItem
+				avatar={avatar2}
+				name='Amir Amir Amir'
+				message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, quod.'
+				time='14:44'
+				checked={true}
+			/>
+			<ChatItem
+				avatar={avatar3}
+				name='Amir'
+				message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, quod.'
+				time='14:44'
+				checked={true}
+			/>
+			<ChatItem
+				avatar={avatar4}
+				name='Amir'
+				message='Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, quod.'
+				time='14:44'
+				checked={true}
+			/>
 		</div>
 	)
 }
