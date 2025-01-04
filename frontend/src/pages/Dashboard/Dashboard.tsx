@@ -20,7 +20,7 @@ export const Dashboard = () => {
 				<ChatList />
 				<Profile avatar={avatar1} name='Amir' tag='#amiryuld' />
 			</Sidebar>
-			<Chat isSidebarOpen={isSidebarOpen} />
+			<Chat />
 		</Container>
 	)
 }
