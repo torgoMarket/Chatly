@@ -1,4 +1,3 @@
-import clsx from 'clsx'
 import { useTheme } from './context/ThemeContext'
 import AppRouter from './router/AppRouter'
 import './styles/index.scss'
@@ -7,7 +6,7 @@ function App() {
 	const { theme } = useTheme()
 
 	return (
-		<div className={clsx(theme)}>
+		<div className={'light'}>
 			<AppRouter />
 		</div>
 	)
