@@ -1,0 +1,15 @@
+.deviceControl {
+	@apply flex gap-4;
+
+	.deviceIcon {
+		@apply text-text size-5 cursor-pointer;
+	}
+
+	.deviceOn {
+		@apply text-completed;
+	}
+
+	.deviceOff {
+		@apply text-error;
+	}
+}

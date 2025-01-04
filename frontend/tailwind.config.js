@@ -12,6 +12,8 @@ module.exports = {
 				background: 'var(--background)',
 				text: 'var(--text)',
 				secondaryText: 'var(--secondary-text)',
+				error: 'var(--error)',
+				completed: 'var(--completed)',
 			},
 		},
 	},

@@ -3,6 +3,7 @@ import { Actionbar } from '../../components/Actionbar/Actionbar'
 import { Chat } from '../../components/Chat/Chat'
 import { ChatList } from '../../components/ChatList/ChatList'
 import { Container } from '../../components/Container/Container'
+import { DeviceControl } from '../../components/Layouts/DeviceControl/DeviceControl'
 import { Profile } from '../../components/Layouts/Profile/Profile'
 import { Sidebar } from '../../components/Sidebar/Sidebar'
 import { BurgerBtn } from '../../components/UI/BurgerBtn/BurgerBtn'
@@ -14,6 +15,7 @@ export const Dashboard = () => {
 		<Container>
 			<Actionbar>
 				<BurgerBtn isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+				<DeviceControl isMicOn={true} isHeadsetOn={true} />
 			</Actionbar>
 
 			<Sidebar isOpen={isSidebarOpen}>

@@ -2,7 +2,7 @@
 	@apply flex flex-col max-h-[calc(100vh-4rem)] gap-2 px-4 py-6 overflow-y-auto lg:translate-x-72 lg:w-[calc(100%-18rem)];
 
 	.date {
-		@apply text-center my-4 text-base text-gray-300;
+		@apply text-center my-4 text-base text-gray-400 font-bold;
 	}
 
 	&::-webkit-scrollbar {
@@ -10,13 +10,13 @@
 	}
 
 	&::-webkit-scrollbar-track {
-		background: #f1f1f1;
+		background: #565656;
 	}
 
 	&::-webkit-scrollbar-thumb {
-		background-color: orange;
+		background-color: #f0a202;
 	}
 
 	scrollbar-width: thin;
-	scrollbar-color: orange #565656;
+	scrollbar-color: #f0a202 #565656;
 }
