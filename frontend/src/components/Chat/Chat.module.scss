@@ -1,0 +1,7 @@
+.chat {
+	@apply border border-white  min-h-[100vh-4rem] overflow-hidden;
+}
+
+.sidebarOpen {
+	@apply w-[calc(100vw-18rem)] translate-x-72 max-w-[calc(1200px-18rem)];
+}

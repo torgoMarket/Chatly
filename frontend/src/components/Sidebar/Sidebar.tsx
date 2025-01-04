@@ -9,13 +9,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ children, isOpen }) => {
 	return (
-		<div
-			className={clsx(
-				isOpen ? 'translate-x-0' : '-translate-x-full',
-				styles.sidebar,
-				'sm:translate-x-0'
-			)}
-		>
+		<div className={clsx(!isOpen && '-translate-x-full', styles.sidebar)}>
 			{children}
 		</div>
 	)
