@@ -6,6 +6,7 @@ import { Home } from '../pages/Home/Home'
 import { Login } from '../pages/Login/Login'
 import { Recover } from '../pages/Recover/Recover'
 import { Register } from '../pages/Register/Register'
+import { Settings } from '../pages/Settings/Settings'
 
 const AppRouter: React.FC = () => {
 	return (
@@ -16,6 +17,7 @@ const AppRouter: React.FC = () => {
 				<Route path='/recover' element={<Recover />} />
 				<Route path='/register' element={<Register />} />
 				<Route path='/dashboard' element={<Dashboard />} />
+				<Route path='/settings' element={<Settings />} />
 			</Routes>
 		</Router>
 	)

@@ -1,0 +1,15 @@
+.setting {
+	@apply px-10 lg:px-0;
+
+	.header {
+		@apply w-full flex items-center py-10;
+
+		h1 {
+			@apply text-3xl font-bold mx-auto;
+		}
+
+		.backIcon {
+			@apply cursor-pointer size-6;
+		}
+	}
+}

@@ -1,0 +1,13 @@
+.updateImage {
+	img {
+		@apply w-32 h-32 rounded-full;
+	}
+
+	.imageUpload {
+		@apply hidden;
+	}
+
+	.defaultImage {
+		@apply w-32 h-32 rounded-full bg-slate-400;
+	}
+}

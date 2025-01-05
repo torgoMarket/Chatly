@@ -1,5 +1,6 @@
 import { Settings } from 'lucide-react'
 
+import { useNavigate } from 'react-router-dom'
 import styles from './Profile.module.scss'
 
 interface ProfileProps {
@@ -9,6 +10,8 @@ interface ProfileProps {
 }
 
 export const Profile: React.FC<ProfileProps> = ({ name, avatar, tag }) => {
+	const navigate = useNavigate()
+
 	return (
 		<div className={styles.profile}>
 			<div className={styles.avatar}>
@@ -21,7 +24,7 @@ export const Profile: React.FC<ProfileProps> = ({ name, avatar, tag }) => {
 				<div className={styles.tag}>{tag}</div>
 			</div>
 			<div className={styles.setting}>
-				<Settings />
+				<Settings onClick={() => navigate('/settings')} />
 			</div>
 		</div>
 	)

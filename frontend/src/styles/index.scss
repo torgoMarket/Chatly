@@ -7,5 +7,5 @@
 @import './variables.scss';
 
 .app {
-	@apply min-h-screen w-screen overflow-hidden h-full font-sans bg-background;
+	@apply min-h-screen w-full overflow-hidden font-sans bg-background;
 }
