@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Form } from '../../components/Form/Form'
 import { Field } from '../../components/Layouts/Field/Field'
 import { Button } from '../../components/UI/Button/Button'
+import { Input } from '../../components/UI/Input/Input'
 import styles from './Recover.module.scss'
 export const Recover = () => {
 	const navigate = useNavigate()
@@ -20,12 +21,20 @@ export const Recover = () => {
 		<div className={styles.recover}>
 			<Form>
 				<h3>Recover Password</h3>
-				{stage === 0 && <Field label='email'></Field>}
+				{stage === 0 && (
+					<Field label='email'>
+						<Input type='email' placeholder='Email' scale='md' />
+					</Field>
+				)}
 
 				{stage === 1 && (
 					<>
-						<Field label='password'></Field>
-						<Field label='repeat password'></Field>
+						<Field label='password'>
+							<Input type='password' placeholder='Password' scale='md' />
+						</Field>
+						<Field label='repeat password'>
+							<Input type='password' placeholder='Repeat Password' scale='md' />
+						</Field>
 					</>
 				)}
 

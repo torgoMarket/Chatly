@@ -1,5 +1,5 @@
 .input {
-	@apply max-w-40 h-12 border border-secondary rounded-md px-2 pt-2 focus:outline-none  text-black focus:bg-secondary focus:text-white text-lg transition-all duration-300;
+	@apply border border-secondary rounded-md px-2 pt-2 focus:outline-none  text-black focus:bg-secondary focus:text-white text-lg transition-all duration-300;
 }
 
 .sm {
@@ -11,5 +11,5 @@
 }
 
 .lg {
-	@apply max-w-60 h-12;
+	@apply w-full h-12 pt-0;
 }

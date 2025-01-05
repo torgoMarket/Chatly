@@ -1,8 +1,8 @@
 import { Check, CheckCheck } from 'lucide-react'
 
-import styles from './ChatItem.module.scss'
+import styles from './ChatListItem.module.scss'
 
-interface ChatItemProps {
+interface ChatListItemProps {
 	name: string
 	message: string
 	time: string
@@ -10,7 +10,7 @@ interface ChatItemProps {
 	avatar: string
 }
 
-export const ChatItem: React.FC<ChatItemProps> = ({
+export const ChatListItem: React.FC<ChatListItemProps> = ({
 	name,
 	message,
 	time,
@@ -18,7 +18,7 @@ export const ChatItem: React.FC<ChatItemProps> = ({
 	avatar,
 }) => {
 	return (
-		<div className={styles.chatItem}>
+		<div className={styles.chatListItem}>
 			<div className={styles.avatar}>
 				<img src={avatar} alt='Avatar' />
 			</div>
