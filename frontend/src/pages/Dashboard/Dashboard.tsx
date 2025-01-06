@@ -24,8 +24,8 @@ export const Dashboard = () => {
 			</Actionbar>
 
 			<Sidebar isOpen={isSidebarOpen}>
-				<Field>
-					<Input placeholder='Search' scale='lg' className='my-4' />
+				<Field className='p-4'>
+					<Input placeholder='Search' scale='lg' />
 				</Field>
 
 				<ChatList />

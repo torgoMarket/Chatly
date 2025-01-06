@@ -1,5 +1,5 @@
 .input {
-	@apply text-text text-base bg-transparent border-transparent outline-none transition-all duration-300 border-b hover:border-text;
+	@apply text-text text-base bg-transparent border-transparent outline-none transition-all duration-300 border-b hover:border-text focus:border-text;
 }
 
 .sm {

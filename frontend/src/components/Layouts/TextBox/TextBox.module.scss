@@ -2,12 +2,16 @@
 	@apply absolute w-full lg:left-72 lg:w-[calc(1200px-18rem)] bottom-0 px-4 flex items-center p-3 bg-background;
 
 	.textarea {
-		@apply w-4/5 min-h-[40px] max-h-[360px] resize-none p-3 border border-gray-300 rounded-md text-sm leading-5 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-gray-400 overflow-hidden overflow-y-auto;
+		@apply w-4/5 min-h-[40px] max-h-[360px] resize-none p-3 leading-5 overflow-hidden overflow-y-auto outline-none bg-transparent text-text placeholder:text-secondaryText border-t border-transparent focus:border-text transition-all duration-300;
 
 		&::-webkit-scrollbar {
 			display: none;
 		}
 		-ms-overflow-style: none;
 		scrollbar-width: none;
+	}
+
+	.send {
+		@apply w-1/5 size-6 text-white self-end mb-2 cursor-pointer hover:text-blue-500 transition-all duration-300;
 	}
 }
