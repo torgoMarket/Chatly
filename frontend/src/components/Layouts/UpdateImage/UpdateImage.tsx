@@ -1,6 +1,5 @@
-import React from 'react'
-
 import clsx from 'clsx'
+import React from 'react'
 import styles from './UpdateImage.module.scss'
 
 interface UpdateImageProps {
@@ -26,17 +25,18 @@ export const UpdateImage: React.FC<UpdateImageProps> = ({
 	}
 
 	return (
-		<div className={clsx(styles.updateImage, className)}>
-			<label htmlFor='imageUpload'>
+		<div className={clsx(styles.updateImageContainer, className)}>
+			<label htmlFor='imageUpload' className={styles.imageWrapper}>
 				{currentImage ? (
 					<img
-						src={currentImage ? currentImage : 'default-avatar.png'}
+						src={currentImage || 'default-avatar.png'}
 						alt='Avatar'
-						style={{ width: '100px', height: '100px', cursor: 'pointer' }}
+						className={styles.image}
 					/>
 				) : (
 					<div className={styles.defaultImage}></div>
 				)}
+				<div className={styles.updateButton}>Update</div>
 			</label>
 			<input
 				id='imageUpload'

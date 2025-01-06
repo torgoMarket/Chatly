@@ -1,15 +1,43 @@
 .setting {
-	@apply px-10 lg:px-0;
+	@apply max-w-[500px] mx-auto;
 
 	.header {
 		@apply w-full flex items-center py-10;
 
-		h1 {
-			@apply text-3xl font-bold mx-auto;
+		.heading {
+			@apply text-text text-3xl font-bold mx-auto;
 		}
 
 		.backIcon {
-			@apply cursor-pointer size-6;
+			@apply text-text cursor-pointer size-6;
+		}
+	}
+
+	.wrapper {
+		@apply flex gap-6;
+
+		.info {
+			@apply flex flex-col pt-2 gap-2;
+
+			.name {
+				@apply text-text font-bold text-lg;
+			}
+
+			.tag {
+				@apply text-secondaryText;
+			}
+		}
+	}
+
+	.settingList {
+		@apply flex flex-col gap-4 pt-8;
+
+		.settingListItem {
+			@apply w-full flex justify-between items-center;
+
+			.title {
+				@apply text-text text-lg;
+			}
 		}
 	}
 }

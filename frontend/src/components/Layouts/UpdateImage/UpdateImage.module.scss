@@ -1,13 +1,27 @@
-.updateImage {
-	img {
-		@apply w-32 h-32 rounded-full;
+.updateImageContainer {
+	@apply relative inline-block;
+
+	.imageWrapper {
+		@apply relative inline-block cursor-pointer;
+
+		&:hover .updateButton {
+			@apply flex;
+		}
+	}
+
+	.image {
+		@apply w-24 h-24 object-cover rounded-full;
+	}
+
+	.defaultImage {
+		@apply w-24 h-24 bg-gray-200 rounded-full;
+	}
+
+	.updateButton {
+		@apply hidden absolute top-0 left-0 w-24 h-24 bg-background opacity-80 text-text items-center justify-center rounded-full text-sm font-bold uppercase;
 	}
 
 	.imageUpload {
 		@apply hidden;
-	}
-
-	.defaultImage {
-		@apply w-32 h-32 rounded-full bg-secondaryText;
 	}
 }
