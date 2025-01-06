@@ -19,7 +19,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 	const [theme, setThemeState] = useState<Theme>('light')
 
 	useEffect(() => {
-		console.log(window.matchMedia('(prefers-color-scheme: l)'))
 		const systemTheme = window.matchMedia('(prefers-color-scheme: dark)')
 			.matches
 			? 'dark'

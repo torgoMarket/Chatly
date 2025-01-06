@@ -7,6 +7,7 @@ import { CurrentChatUserInfo } from '../../components/Layouts/CurrentChatUserInf
 import { DeviceControl } from '../../components/Layouts/DeviceControl/DeviceControl'
 import { Field } from '../../components/Layouts/Field/Field'
 import { Profile } from '../../components/Layouts/Profile/Profile'
+import { TextBox } from '../../components/Layouts/TextBox/TextBox'
 import { Sidebar } from '../../components/Sidebar/Sidebar'
 import { BurgerBtn } from '../../components/UI/BurgerBtn/BurgerBtn'
 import { Input } from '../../components/UI/Input/Input'
@@ -31,6 +32,7 @@ export const Dashboard = () => {
 				<Profile avatar={avatar1} name='Amir' tag='#amiryuld' />
 			</Sidebar>
 			<Chat />
+			<TextBox />
 		</Container>
 	)
 }

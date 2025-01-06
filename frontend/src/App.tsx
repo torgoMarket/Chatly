@@ -7,7 +7,7 @@ function App() {
 	const { theme } = useTheme()
 
 	return (
-		<div className={clsx('app', 'dark')}>
+		<div className={clsx('app', theme)}>
 			<AppRouter />
 		</div>
 	)
