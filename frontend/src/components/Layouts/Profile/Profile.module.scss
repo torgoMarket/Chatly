@@ -1,5 +1,5 @@
 .profile {
-	@apply w-full h-16 flex gap-2 px-4 py-2 cursor-pointer border-t border-secondary;
+	@apply w-full h-16 flex gap-2 px-4 py-2 cursor-pointer border-t border-text;
 
 	.avatar {
 		@apply h-full flex items-center justify-center;
@@ -17,11 +17,11 @@
 		}
 
 		.tag {
-			@apply text-sm text-gray-400;
+			@apply text-sm text-secondaryText;
 		}
 	}
 
 	.setting {
-		@apply flex flex-col justify-center items-end;
+		@apply flex flex-col justify-center items-end text-text;
 	}
 }

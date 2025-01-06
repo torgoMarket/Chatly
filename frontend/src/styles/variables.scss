@@ -1,23 +1,21 @@
 .light {
-	background: #f1f7ee;
-	color: #292f36;
-	--primary: #f0a202;
-	--secondary: #f46036;
-	--background: #f1f7ee;
-	--text: #292f36;
-	--secondary-text: #f1f7ee;
-	--completed: #0ecc70;
-	--error: #f45b69;
+	--background: #f8f7f9;
+	--text: #003049;
+
+	--primary: #f2f2f2;
+	--secondary-text: #b5b5b5;
+
+	--completed: #00d9c0;
+	--error: #ef233c;
 }
 
 .dark {
-	background: #292f36;
-	color: #f1f7ee;
-	--primary: #f0a202;
-	--secondary: #f46036;
-	--background: #292f36;
-	--text: #f1f7ee;
-	--secondary-text: #292f36;
-	--completed: #3affc4;
-	--error: #f45b69;
+	--background: #003049;
+	--text: #f8f7f9;
+
+	--primary: #003856;
+	--secondary-text: #b5b5b5;
+
+	--completed: #00d9c0;
+	--error: #ef233c;
 }

@@ -1,5 +1,5 @@
 .btn {
-	@apply bg-secondary text-white rounded-lg;
+	@apply bg-text text-background hover:bg-transparent hover:text-text rounded-lg transition-all duration-300 ease-in-out;
 }
 
 .sm {

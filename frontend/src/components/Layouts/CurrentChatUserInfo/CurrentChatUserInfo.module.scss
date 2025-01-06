@@ -9,11 +9,11 @@
 		@apply ml-4;
 
 		.name {
-			@apply text-lg font-semibold;
+			@apply text-lg font-semibold text-text;
 		}
 
 		.seen {
-			@apply text-xs text-gray-400;
+			@apply text-xs text-secondaryText;
 		}
 	}
 }

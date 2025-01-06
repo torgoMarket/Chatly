@@ -20,7 +20,8 @@ export const Recover = () => {
 	return (
 		<div className={styles.recover}>
 			<Form>
-				<h3>Recover Password</h3>
+				<h3 className={styles.formTitle}>Recover Password</h3>
+
 				{stage === 0 && (
 					<Field label='email'>
 						<Input type='email' placeholder='Email' scale='md' />

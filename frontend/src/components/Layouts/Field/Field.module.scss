@@ -3,9 +3,9 @@
 }
 
 .label {
-	@apply text-text text-sm absolute -top-2 left-2 px-2 bg-secondary rounded-xl;
+	@apply hidden;
 }
 
 .error {
-	@apply text-red-600 text-sm;
+	@apply text-error text-sm;
 }

@@ -8,7 +8,7 @@ export const Register = () => {
 	return (
 		<div className={styles.register}>
 			<Form>
-				<h3>Register</h3>
+				<h3 className={styles.formTitle}>Register</h3>
 				<Field label='email'>
 					<Input placeholder='Email' scale='md' />
 				</Field>
@@ -19,7 +19,9 @@ export const Register = () => {
 					<Input placeholder='Repeat Password' scale='md' />
 				</Field>
 				<Button>Register</Button>
-				<Link to='/login'>Have Account?</Link>
+				<Link to='/login' className={styles.link}>
+					Have Account?
+				</Link>
 			</Form>
 		</div>
 	)

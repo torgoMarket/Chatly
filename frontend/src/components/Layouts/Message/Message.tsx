@@ -20,11 +20,12 @@ export const Message: React.FC<MessageProps> = ({
 			<div className={styles.text}>{text}</div>
 			<div className={styles.info}>
 				<div className={styles.time}>{time}</div>
-				{checked ? (
-					<CheckCheck className={styles.checked} />
-				) : (
-					<Check className={styles.checked} />
-				)}
+				{variant === 'sent' &&
+					(checked ? (
+						<CheckCheck className={styles.checked} />
+					) : (
+						<Check className={styles.checked} />
+					))}
 			</div>
 		</div>
 	)

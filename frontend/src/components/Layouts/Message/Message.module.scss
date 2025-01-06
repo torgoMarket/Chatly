@@ -5,7 +5,7 @@
 		@apply flex gap-1 absolute bottom-1 right-1 text-base;
 
 		.time {
-			@apply text-gray-600 text-xs;
+			@apply text-secondaryText text-xs;
 		}
 
 		.checked {
@@ -15,9 +15,9 @@
 }
 
 .received {
-	@apply bg-orange-200 text-black self-start rounded-tl-sm;
+	@apply text-text self-start rounded-tl-sm;
 }
 
 .sent {
-	@apply bg-red-300 text-black self-end rounded-tr-sm;
+	@apply bg-primary text-text self-end rounded-tr-sm;
 }

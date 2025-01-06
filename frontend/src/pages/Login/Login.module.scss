@@ -1,3 +1,11 @@
 .login {
 	@apply flex justify-center items-center h-screen;
+
+	.formTitle {
+		@apply text-text text-lg;
+	}
+
+	.link {
+		@apply text-text text-sm;
+	}
 }

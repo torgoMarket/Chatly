@@ -13,7 +13,7 @@ export const Login = () => {
 	return (
 		<div className={styles.login}>
 			<Form>
-				<h3>Login</h3>
+				<h3 className={styles.formTitle}>Login</h3>
 				<Field label='email'>
 					<Input placeholder='Email' scale='md' />
 				</Field>
@@ -21,8 +21,12 @@ export const Login = () => {
 					<Input placeholder='Password' scale='md' />
 				</Field>
 				<Button onClick={() => handleForm()}>Login</Button>
-				<Link to='/register'>No Account?</Link>
-				<Link to='/recover'>Forget Password?</Link>
+				<Link to='/register' className={styles.link}>
+					No Account?
+				</Link>
+				<Link to='/recover' className={styles.link}>
+					Forget Password?
+				</Link>
 			</Form>
 		</div>
 	)
