@@ -10,7 +10,7 @@ interface ChatListItemProps {
 	avatar: string
 	onDragStart: (id: string) => void
 	onDrop: (id: string) => void
-	id: string // Unique identifier for each item
+	id: string
 }
 
 export const ChatListItem: React.FC<ChatListItemProps> = ({
