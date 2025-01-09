@@ -1,4 +1,6 @@
 export const useValidate = (userData: Record<string, string>) => {
+	const { name, email, password, repeatPassword } = userData
+
 	const error = Object.fromEntries(
 		userData && Object.keys(userData).map(field => [field, ''])
 	)
@@ -9,23 +11,19 @@ export const useValidate = (userData: Record<string, string>) => {
 		}
 	}
 
-	if (
-		userData.password &&
-		userData.repeatPassword &&
-		userData.password !== userData.repeatPassword
-	) {
+	if (password !== repeatPassword) {
 		error.repeatPassword = 'Passwords do not match'
 	}
 
-	if (userData.email && !userData.email.includes('@')) {
+	if (!email.includes('@')) {
 		error.email = 'Invalid email'
 	}
 
-	if (userData.password && userData.password.length < 6) {
+	if (password?.length < 6) {
 		error.password = 'Minimum 6 characters'
 	}
 
-	if (userData.name && userData.name.length < 4) {
+	if (name?.length < 4) {
 		error.name = 'Minimum 4 characters'
 	}
 
