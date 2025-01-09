@@ -19,7 +19,7 @@ export const Register = () => {
 		Object.fromEntries(registerFields.map(({ field }) => [field, '']))
 	)
 
-	const { error } = useValidate({ userData })
+	const { error } = useValidate(userData)
 
 	const register = () => {
 		if (Object.values(error).some(err => err)) {

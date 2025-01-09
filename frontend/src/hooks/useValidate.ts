@@ -1,5 +1,7 @@
-export const useValidate = ({ userData }) => {
-	const error = Object.fromEntries(Array.from(userData, field => [field, '']))
+export const useValidate = (userData: Record<string, string>) => {
+	const error = Object.fromEntries(
+		userData && Object.keys(userData).map(field => [field, ''])
+	)
 
 	for (const field in userData) {
 		if (!userData[field]) {
