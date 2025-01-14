@@ -10,5 +10,8 @@
             "username": "postgres",
             "password": "admin123"
         }
+    ],
+    "cSpell.words": [
+        "verfication"
     ]
 }

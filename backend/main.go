@@ -1,39 +1,26 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
+	"os"
 
-	"github.com/gin-gonic/gin"
-	"github.com/torgoMarket/Chatly/backend/controllers"
 	"github.com/torgoMarket/Chatly/backend/initializers"
-	"github.com/torgoMarket/Chatly/backend/middleware"
+	"github.com/torgoMarket/Chatly/backend/router"
 	"github.com/torgoMarket/Chatly/backend/websocket"
 )
 
 func init() {
 	initializers.LoadEnvVariables()
-	initializers.ConnectToDb()
+
+	initializers.InitDB()
 	initializers.SyncDatabase()
 }
 
-func serveWS(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
-	fmt.Println("websocket endpoint reached")
-	conn, _ := websocket.Upgrade(w, r)
-	client := &websocket.Client{Conn: conn, Pool: pool}
-	pool.Register <- client
-	client.Read()
-
-}
-
-func setupRotes() {
-	pool := websocket.NewPool()
-	go pool.Start()
-}
 func main() {
-	r := gin.Default()
-	r.POST("/signup", controllers.SignUp)
-	r.POST("/login", controllers.Login)
-	r.GET("/val", middleware.RequireAuth, controllers.Validate)
-	r.Run()
+	// init server
+	hub := websocket.NewHub()
+	wshandler := websocket.NewHandler(hub)
+	go hub.Run()
+	router.InitRouter(wshandler)
+	router.Start(os.Getenv("PORT"))
+
 }
