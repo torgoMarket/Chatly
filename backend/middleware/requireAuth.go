@@ -19,7 +19,7 @@ func RequireAuth(c *gin.Context) {
 	}
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method : %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method : %v", token.Header["alg"])
 		}
 		return []byte(os.Getenv("CRYPTO")), nil
 
@@ -34,7 +34,7 @@ func RequireAuth(c *gin.Context) {
 		}
 		var user *models.User
 		initializers.DB.First(&user, claims["sub"])
-		if user.Id == 0 {
+		if user.ID == 0 {
 			c.AbortWithStatus(http.StatusUnauthorized)
 		}
 		c.Set("user", user)
@@ -42,4 +42,16 @@ func RequireAuth(c *gin.Context) {
 	} else {
 		c.AbortWithStatus(http.StatusUnauthorized)
 	}
+}
+
+func GenerateJWT(userID uint) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"sub": userID,
+		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
+	})
+	tokenString, err := token.SignedString([]byte(os.Getenv("CRYPTO")))
+	if err != nil {
+		return "Failde to create tokent", err //"Failed to create token"
+	}
+	return tokenString, err
 }
