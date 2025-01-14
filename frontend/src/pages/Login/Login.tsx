@@ -45,7 +45,9 @@ export const Login = () => {
 						/>
 					</Field>
 				))}
-				<Button onClick={() => login()}>Login</Button>
+				<Button type='button' onClick={() => login()}>
+					Login
+				</Button>
 				<Link to='/register' className={styles.link}>
 					No Account?
 				</Link>
