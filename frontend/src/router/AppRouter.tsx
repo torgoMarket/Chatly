@@ -7,6 +7,7 @@ import { Login } from '../pages/Login/Login'
 import { Recover } from '../pages/Recover/Recover'
 import { Register } from '../pages/Register/Register'
 import { Settings } from '../pages/Settings/Settings'
+import { Test } from '../pages/Test'
 
 const AppRouter: React.FC = () => {
 	return (
@@ -18,6 +19,7 @@ const AppRouter: React.FC = () => {
 				<Route path='/register' element={<Register />} />
 				<Route path='/dashboard' element={<Dashboard />} />
 				<Route path='/settings' element={<Settings />} />
+				<Route path='/test' element={<Test />} />
 			</Routes>
 		</Router>
 	)

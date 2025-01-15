@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"fmt"
 	"sync"
 )
 
@@ -75,6 +76,8 @@ func (h *Hub) removeClientFromRoom(client *Client) {
 func (h *Hub) sendMessageToRoom(message *Message) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
+
+	fmt.Println(message.Content)
 
 	room, exists := h.Rooms[message.RoomID]
 	if !exists {

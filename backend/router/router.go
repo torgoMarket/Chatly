@@ -16,8 +16,8 @@ func InitRouter(wsHandler *websocket.Handler) { //userHandler *userHandler,
 	r = gin.Default()
 
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},
-		AllowMethods:     []string{"GET", "POST"},
+		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
@@ -34,7 +34,7 @@ func InitRouter(wsHandler *websocket.Handler) { //userHandler *userHandler,
 	r.POST("/vermail", controllers.VerifyEmail)
 
 	r.POST("/ws/createroom", wsHandler.CreateRoom)
-	r.GET("/ws/joinroom/:roomId", wsHandler.JoinRoom)
+	r.GET("/ws/joinroom", wsHandler.JoinRoom)
 	r.GET("/ws/getrooms", wsHandler.GetRooms)
 	r.GET("/ws/getclients/:roomId", wsHandler.GetClients)
 }
