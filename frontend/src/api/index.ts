@@ -15,7 +15,11 @@ $api.interceptors.response.use(
 		return response
 	},
 	error => {
-		if (error.response.status === 401) {
+		if (
+			error.response.status === 401 &&
+			window.location.href.split('/').at(-1) !== 'register' &&
+			window.location.href.split('/').at(-1) !== 'login'
+		) {
 			window.location.href = '/login'
 		}
 		return Promise.reject(error)

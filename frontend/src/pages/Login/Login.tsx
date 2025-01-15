@@ -5,6 +5,7 @@ import { Form } from '../../components/Form/Form'
 import { Field } from '../../components/Layouts/Field/Field'
 import { Button } from '../../components/UI/Button/Button'
 import { Input } from '../../components/UI/Input/Input'
+import { useCheckAuth } from '../../hooks/useCheckAuth'
 import { useValidate } from '../../hooks/useValidate'
 import { loginUser } from '../../services/userService'
 import { TUserLogin } from '../../types/userTypes'
@@ -17,6 +18,8 @@ const loginFields = [
 
 export const Login = () => {
 	const navigate = useNavigate()
+
+	useCheckAuth()
 
 	const [userData, setUserData] = useState<TUserLogin>({
 		email: '',

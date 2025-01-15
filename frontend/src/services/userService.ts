@@ -2,8 +2,9 @@ import axios, { AxiosResponse } from 'axios'
 import { $api } from '../api'
 import { TUserLogin, TUserRegister } from '../types/userTypes'
 
-interface IErrorResponse {
+interface IResponse extends AxiosResponse {
 	response: {
+		status: number
 		data: {
 			error?: {
 				ConstraintName?: string
@@ -23,7 +24,7 @@ export const registerUser = async (userData: TUserRegister) => {
 		return response
 	} catch (error: unknown) {
 		if (axios.isAxiosError(error)) {
-			const axiosError = error as unknown as IErrorResponse
+			const axiosError = error as unknown as IResponse
 			return axiosError.response
 		}
 	}
@@ -38,7 +39,7 @@ export const loginUser = async (userData: TUserLogin) => {
 		return response as AxiosResponse
 	} catch (error: unknown) {
 		if (axios.isAxiosError(error)) {
-			const axiosError = error as unknown as IErrorResponse
+			const axiosError = error as unknown as IResponse
 			return axiosError.response
 		}
 	}

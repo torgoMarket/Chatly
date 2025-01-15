@@ -1,10 +1,10 @@
-import { AxiosResponse } from 'axios'
 import { FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Form } from '../../components/Form/Form'
 import { Field } from '../../components/Layouts/Field/Field'
 import { Button } from '../../components/UI/Button/Button'
 import { Input } from '../../components/UI/Input/Input'
+import { useCheckAuth } from '../../hooks/useCheckAuth'
 import { useValidate } from '../../hooks/useValidate'
 import { registerUser } from '../../services/userService'
 import { TUserRegister } from '../../types/userTypes'
@@ -19,15 +19,15 @@ const registerFields = [
 
 export const Register = () => {
 	const navigate = useNavigate()
-
 	const [userData, setUserData] = useState<TUserRegister>({
 		name: '',
 		email: '',
 		password: '',
 		repeatPassword: '',
 	})
-
 	const [formError, setFormError] = useState<string>('')
+
+	useCheckAuth()
 
 	const { error } = useValidate(userData)
 
@@ -37,13 +37,13 @@ export const Register = () => {
 			return
 		}
 
-		const response = (await registerUser(userData)) as AxiosResponse
+		const response = await registerUser(userData)
 
 		if (response?.data?.error?.ConstraintName === 'uni_users_email') {
 			setFormError('Email is already used')
 		}
 
-		if (response.status === 200) {
+		if (response?.status === 200) {
 			setFormError('')
 			navigate('/login')
 		}
@@ -51,7 +51,7 @@ export const Register = () => {
 
 	return (
 		<div className={styles.register}>
-			<Form onSubmit={e => register(e)}>
+			<Form onSubmit={register}>
 				<h3 className={styles.formTitle}>Register</h3>
 
 				{registerFields.map(({ field, placeholder, type }) => (
@@ -61,7 +61,10 @@ export const Register = () => {
 							type={type}
 							scale='md'
 							onChange={e =>
-								setUserData({ ...userData, [field]: e.target.value })
+								setUserData(prevData => ({
+									...prevData,
+									[field]: e.target.value,
+								}))
 							}
 						/>
 					</Field>
