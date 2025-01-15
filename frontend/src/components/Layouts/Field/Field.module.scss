@@ -2,10 +2,6 @@
 	@apply relative flex flex-col gap-2;
 }
 
-.label {
-	@apply hidden;
-}
-
 .error {
 	@apply text-error text-sm;
 }
