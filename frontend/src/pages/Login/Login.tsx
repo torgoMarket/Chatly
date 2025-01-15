@@ -1,10 +1,13 @@
-import { useState } from 'react'
+import { AxiosResponse } from 'axios'
+import { FormEvent, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Form } from '../../components/Form/Form'
 import { Field } from '../../components/Layouts/Field/Field'
 import { Button } from '../../components/UI/Button/Button'
 import { Input } from '../../components/UI/Input/Input'
 import { useValidate } from '../../hooks/useValidate'
+import { loginUser } from '../../services/userService'
+import { TUserLogin } from '../../types/userTypes'
 import styles from './Login.module.scss'
 
 const loginFields = [
@@ -15,23 +18,37 @@ const loginFields = [
 export const Login = () => {
 	const navigate = useNavigate()
 
-	const [userData, setUserData] = useState(
-		Object.fromEntries(loginFields.map(({ field }) => [field, '']))
-	)
+	const [userData, setUserData] = useState<TUserLogin>({
+		email: '',
+		password: '',
+	})
+
+	const [formError, setFormError] = useState<string>('')
 
 	const { error } = useValidate(userData)
 
-	const login = () => {
+	const login = async (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+
 		if (Object.values(error).some(err => err)) {
 			return
 		}
 
-		navigate('/dashboard')
+		const response = (await loginUser(userData)) as AxiosResponse
+		console.log('response?.data?.error', response?.data?.error)
+
+		if (response?.data?.error === 'Invalid Email or Password') {
+			setFormError('Invalid Email or Password')
+		}
+		if (response.status === 200) {
+			setFormError('')
+			navigate('/dashboard')
+		}
 	}
 
 	return (
 		<div className={styles.login}>
-			<Form>
+			<Form onSubmit={e => login(e)}>
 				<h3 className={styles.formTitle}>Login</h3>
 				{loginFields.map(({ field, placeholder, type }) => (
 					<Field key={field} error={error[field] as string}>
@@ -45,9 +62,10 @@ export const Login = () => {
 						/>
 					</Field>
 				))}
-				<Button type='button' onClick={() => login()}>
-					Login
-				</Button>
+
+				<span className={styles.error}>{formError}</span>
+
+				<Button type='submit'>Login</Button>
 				<Link to='/register' className={styles.link}>
 					No Account?
 				</Link>

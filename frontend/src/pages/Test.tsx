@@ -8,51 +8,6 @@ export const Test = () => {
 		`ws://localhost:3000/ws/joinroom?roomid=1userid=11&username=Amir`
 	)
 
-	// Handle Register request
-	const Register = async () => {
-		ws.send('Hello')
-		// try {
-		// 	const response = await axios.post('http://localhost:3000/signup', {
-		// 		Name: 'Amir',
-		// 		Email: 'amir1008047@gmail.com',
-		// 		Password: 'Hello45$',
-		// 		Color_id: 0,
-		// 	})
-		// 	console.log('Register response:', response)
-
-		// 	if (response.status === 200) {
-		// 		const responseMail = await axios.post(
-		// 			'http://localhost:3000/sendmail',
-		// 			{
-		// 				Email: 'amir1008047@gmail.com',
-		// 			}
-		// 		)
-		// 		console.log('SendMail response:', responseMail)
-		// 	}
-		// } catch (error) {
-		// 	console.error('Error during registration:', error)
-		// }
-	}
-
-	// Handle Login request
-	const Login = async () => {
-		try {
-			const response = await axios.post(
-				'http://localhost:3000/login',
-				{
-					Email: 'amir1008047@gmail.com',
-					Password: 'Hello45$',
-				},
-				{
-					withCredentials: true,
-				}
-			)
-			console.log('Login response:', response)
-		} catch (error) {
-			console.error('Error during login:', error)
-		}
-	}
-
 	// Handle Logout request
 	const logout = async () => {
 		try {
@@ -154,18 +109,6 @@ export const Test = () => {
 
 	return (
 		<div className='flex flex-col gap-10 p-20'>
-			<button
-				className='w-60 h-12 bg-amber-200 text-black rounded-xl'
-				onClick={Register}
-			>
-				Register
-			</button>
-			<button
-				className='w-60 h-12 bg-amber-200 text-black rounded-xl'
-				onClick={Login}
-			>
-				Login
-			</button>
 			<button
 				className='w-60 h-12 bg-amber-200 text-black rounded-xl'
 				onClick={EnterCode}

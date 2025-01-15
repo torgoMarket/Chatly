@@ -11,7 +11,7 @@ export const useValidate = (userData: Record<string, string>) => {
 		}
 	}
 
-	if (password !== repeatPassword) {
+	if (repeatPassword && password !== repeatPassword) {
 		error.repeatPassword = 'Passwords do not match'
 	}
 

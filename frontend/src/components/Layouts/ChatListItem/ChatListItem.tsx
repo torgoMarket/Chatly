@@ -28,7 +28,7 @@ export const ChatListItem: React.FC<ChatListItemProps> = ({
 	return (
 		<div
 			className={styles.chatListItem}
-			onDragOver={e => e.preventDefault()} // Necessary to allow dropping
+			onDragOver={e => e.preventDefault()}
 			onDrop={() => onDrop(id)}
 		>
 			<div
@@ -50,10 +50,10 @@ export const ChatListItem: React.FC<ChatListItemProps> = ({
 			</div>
 			<div className={styles.sender}>
 				<div className={styles.name}>
-					{name && name.slice(0, 12)} {name && name.length > 12 && '...'}
+					{name && name.slice(0, 9)} {name && name.length > 9 && '...'}
 				</div>
 				<div className={styles.message}>
-					{message && message.slice(0, 24)} {message.length > 24 && '...'}
+					{message && message.slice(0, 18)} {message.length > 18 && '...'}
 				</div>
 			</div>
 			<div className={styles.info}>
