@@ -38,7 +38,6 @@ export const Login = () => {
 		}
 
 		const response = (await loginUser(userData)) as AxiosResponse
-		console.log('response?.data?.error', response?.data?.error)
 
 		if (response?.data?.error === 'Invalid Email or Password') {
 			setFormError('Invalid Email or Password')

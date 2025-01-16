@@ -11,9 +11,12 @@ import { TextBox } from '../../components/Layouts/TextBox/TextBox'
 import { Sidebar } from '../../components/Sidebar/Sidebar'
 import { BurgerBtn } from '../../components/UI/BurgerBtn/BurgerBtn'
 import { Input } from '../../components/UI/Input/Input'
+import { useGetUserInfo } from '../../hooks/queries/useGetUserInfo'
 import { useToggle } from '../../hooks/useToggle'
 export const Dashboard = () => {
 	const { isOpen: isSidebarOpen, toggle: toggleSidebar } = useToggle(true)
+
+	const { user } = useGetUserInfo()
 
 	return (
 		<Container>

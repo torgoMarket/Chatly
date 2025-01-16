@@ -44,3 +44,15 @@ export const loginUser = async (userData: TUserLogin) => {
 		}
 	}
 }
+
+export const getUserInfo = async () => {
+	try {
+		const response = await $api.get('/val')
+		return response.data
+	} catch (error: unknown) {
+		if (axios.isAxiosError(error)) {
+			const axiosError = error as unknown as IResponse
+			return axiosError.response
+		}
+	}
+}
