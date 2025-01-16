@@ -1,4 +1,4 @@
-import avatar1 from '../../assets/images/avatar1.png'
+import { useEffect } from 'react'
 import { Actionbar } from '../../components/Actionbar/Actionbar'
 import { Chat } from '../../components/Chat/Chat'
 import { ChatList } from '../../components/ChatList/ChatList'
@@ -18,6 +18,17 @@ export const Dashboard = () => {
 
 	const { user } = useGetUserInfo()
 
+	useEffect(() => {
+		if (user) {
+			for (const key in user) {
+				user[key.toLowerCase()] = user[key]
+				delete user[key]
+			}
+		}
+
+		console.log('user', user)
+	}, [user])
+
 	return (
 		<Container>
 			<Actionbar>
@@ -32,7 +43,7 @@ export const Dashboard = () => {
 				</Field>
 
 				<ChatList />
-				<Profile avatar={avatar1} name='Amir' tag='#amiryuld' />
+				<Profile avatar={user?.Color?.Name} name='Amir' tag='#amiryuld' />
 			</Sidebar>
 			<Chat />
 			<TextBox />

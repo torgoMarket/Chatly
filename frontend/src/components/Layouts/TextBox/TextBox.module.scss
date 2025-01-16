@@ -1,8 +1,8 @@
 .textBox {
-	@apply absolute w-full lg:left-72 lg:w-[calc(1200px-18rem)] bottom-0 px-4 flex items-center p-3 bg-background;
+	@apply absolute w-full lg:left-72 lg:w-[calc(1200px-18rem)] bottom-0 p-3 flex items-center bg-primary gap-4;
 
 	.textarea {
-		@apply w-4/5 min-h-[40px] max-h-[360px] resize-none p-3 leading-5 overflow-hidden overflow-y-auto outline-none bg-transparent text-text placeholder:text-secondaryText border-t border-transparent focus:border-text transition-all duration-300;
+		@apply w-full min-h-[40px] max-h-[120px] resize-none p-3 leading-5 overflow-hidden overflow-y-auto outline-none bg-transparent text-text placeholder:text-secondaryText;
 
 		&::-webkit-scrollbar {
 			display: none;
@@ -11,7 +11,47 @@
 		scrollbar-width: none;
 	}
 
+	.emojiPack {
+		@apply hidden absolute w-[calc(100%-80px)] right-20 bottom-0 h-24 text-white z-10 px-3 py-1;
+
+		.emojiCategoriesList {
+			@apply overflow-y-scroll flex flex-col gap-1 pl-3 pr-4 border-r min-w-24;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+
+			.emojiCategoriesListItem {
+				@apply cursor-pointer text-sm;
+			}
+
+			.activeEmojiCategory {
+				@apply font-bold italic;
+			}
+		}
+
+		.emojis {
+			@apply pl-2 flex flex-wrap gap-x-2 overflow-y-scroll;
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+		}
+	}
+
+	.icon {
+		@apply size-6 self-end mb-2 cursor-pointer transition-all duration-300 text-white;
+	}
+
+	.emoji {
+		@apply hover:text-yellow-300;
+	}
+
 	.send {
-		@apply w-1/5 size-6 text-white self-end mb-2 cursor-pointer hover:text-blue-500 transition-all duration-300;
+		@apply hover:text-blue-300;
 	}
 }

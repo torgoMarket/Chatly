@@ -14,8 +14,8 @@ export const CurrentChatUserInfo: React.FC<CurrentChatUserInfoProps> = ({
 		<div className={styles.currentChatUserInfo}>
 			<img src={avatar1} alt='avatar' />
 			<div className={styles.info}>
-				<h3 className={styles.name}>John Doe</h3>
-				<p className={styles.seen}>3m ago</p>
+				<h3 className={styles.name}>{name}</h3>
+				<p className={styles.seen}>{seen}</p>
 			</div>
 		</div>
 	)
