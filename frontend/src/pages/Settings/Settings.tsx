@@ -4,11 +4,25 @@ import avatar1 from '../../assets/images/avatar1.png'
 import { Container } from '../../components/Container/Container'
 import { Field } from '../../components/Layouts/Field/Field'
 import { UpdateImage } from '../../components/Layouts/UpdateImage/UpdateImage'
+import { Button } from '../../components/UI/Button/Button'
 import { Input } from '../../components/UI/Input/Input'
 import { Select } from '../../components/UI/Select/Select'
+import { useGetUserInfo } from '../../hooks/queries/useGetUserInfo'
+import { useCheckAuth } from '../../hooks/useCheckAuth'
+import { logoutUser } from '../../services/userService'
 import styles from './Settings.module.scss'
 export const Settings = () => {
+	useCheckAuth()
+
 	const navigate = useNavigate()
+	const { user } = useGetUserInfo()
+
+	const logout = async () => {
+		const response = await logoutUser(user.email)
+		if (response && response.status === 200) {
+			navigate('/login')
+		}
+	}
 
 	return (
 		<div className={styles.setting}>
@@ -66,6 +80,13 @@ export const Settings = () => {
 						<div className={styles.title}>Device Micro</div>
 						<Select options={['device1', 'device2']} value='device1' />
 					</div>
+					<Button
+						className='bg-error text-white w-24 h-8'
+						onClick={() => logout()}
+						type='button'
+					>
+						Logout
+					</Button>
 				</div>
 			</Container>
 		</div>

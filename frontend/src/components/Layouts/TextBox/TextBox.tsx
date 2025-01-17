@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { Send, Smile } from 'lucide-react'
 import React, { useRef, useState } from 'react'
-import emojiData from '../../../constants/emojiPack.js'
+import { emojiCategories, emojis } from '../../../constants/emojiPack.ts'
 import { useToggle } from '../../../hooks/useToggle'
 import styles from './TextBox.module.scss'
 
@@ -9,7 +9,7 @@ export const TextBox: React.FC = () => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 	const [message, setMessage] = useState('')
 
-	const { isOpen, toggle } = useToggle(true)
+	const { isOpen, toggle } = useToggle(false)
 	const [activeEmojiCategory, setEmojiCategory] = useState<string>('face')
 
 	const handleInput = () => {
@@ -39,7 +39,7 @@ export const TextBox: React.FC = () => {
 			<Send className={clsx(styles.icon, styles.send)} />
 			<div className={clsx(styles.emojiPack, isOpen && '!flex')}>
 				<ul className={styles.emojiCategoriesList}>
-					{emojiData.emojiCategories.map((category: string) => (
+					{emojiCategories.map((category: string) => (
 						<li
 							className={clsx(
 								styles.emojiCategoriesListItem,
@@ -53,7 +53,7 @@ export const TextBox: React.FC = () => {
 					))}
 				</ul>
 				<div className={styles.emojis}>
-					{emojiData.emojis[activeEmojiCategory].map((emoji: string) => (
+					{emojis[activeEmojiCategory].map((emoji: string) => (
 						<span
 							className='cursor-pointer text-lg min-w-6'
 							key={emoji}

@@ -45,6 +45,26 @@ export const loginUser = async (userData: TUserLogin) => {
 	}
 }
 
+export const logoutUser = async (email: string) => {
+	try {
+		const response = await $api.post(
+			'/logout',
+			{
+				Email: email,
+			},
+			{
+				withCredentials: true,
+			}
+		)
+		return response
+	} catch (error) {
+		if (axios.isAxiosError(error)) {
+			const axiosError = error as unknown as IResponse
+			return axiosError.response
+		}
+	}
+}
+
 export const getUserInfo = async () => {
 	try {
 		const response = await $api.get('/val')

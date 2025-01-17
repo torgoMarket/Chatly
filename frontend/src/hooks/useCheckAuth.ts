@@ -13,10 +13,11 @@ export const useCheckAuth = () => {
 				})
 
 				if (status === 200) {
-					navigate('/dashboard')
+					return
 				}
 			} catch (error) {
-				console.error('Error checking authentication:', error)
+				console.log('error', error)
+				navigate('/login')
 			}
 		}
 

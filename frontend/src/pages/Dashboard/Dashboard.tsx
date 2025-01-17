@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Actionbar } from '../../components/Actionbar/Actionbar'
 import { Chat } from '../../components/Chat/Chat'
 import { ChatList } from '../../components/ChatList/ChatList'
@@ -12,22 +11,13 @@ import { Sidebar } from '../../components/Sidebar/Sidebar'
 import { BurgerBtn } from '../../components/UI/BurgerBtn/BurgerBtn'
 import { Input } from '../../components/UI/Input/Input'
 import { useGetUserInfo } from '../../hooks/queries/useGetUserInfo'
+import { useCheckAuth } from '../../hooks/useCheckAuth'
 import { useToggle } from '../../hooks/useToggle'
 export const Dashboard = () => {
+	useCheckAuth()
+
 	const { isOpen: isSidebarOpen, toggle: toggleSidebar } = useToggle(true)
-
 	const { user } = useGetUserInfo()
-
-	useEffect(() => {
-		if (user) {
-			for (const key in user) {
-				user[key.toLowerCase()] = user[key]
-				delete user[key]
-			}
-		}
-
-		console.log('user', user)
-	}, [user])
 
 	return (
 		<Container>
