@@ -4,18 +4,19 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"github.com/torgoMarket/Chatly/backend/initializers"
 	"github.com/torgoMarket/Chatly/backend/middleware"
 	"github.com/torgoMarket/Chatly/backend/models"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func SignUp(c *gin.Context) {
 	var body struct {
-		name     string
-		email    string
-		password string
+		Name     string
+		Email    string
+		Password string
+		NickName string
 	}
 	if c.Bind(&body) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -24,16 +25,14 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(body.password), 10)
+	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to hash password",
 		})
 		return
 	}
-
-	tag := uuid.NewString()
-	user := models.User{Name: body.name, Email: body.email, Password: string(hash), Tag: tag, Device_hear: "", Device_voice: "", ColorID: 0}
+	user := models.User{Name: body.Name, Email: body.Email, Password: string(hash), NickName: body.NickName, Device_hear: "", Device_voice: "", ColorID: 0}
 	result := initializers.DB.Create(&user)
 	if result.Error != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -48,8 +47,8 @@ func SignUp(c *gin.Context) {
 
 func Login(c *gin.Context) {
 	var body struct {
-		email    string
-		password string
+		Email    string
+		Password string
 	}
 	if c.Bind(&body) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -58,7 +57,7 @@ func Login(c *gin.Context) {
 		return
 	}
 	var user models.User
-	initializers.DB.First(&user, "email = ?", body.email)
+	initializers.DB.First(&user, "email = ?", body.Email)
 	if user.ID == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid email or password",
@@ -66,7 +65,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.password))
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -74,7 +73,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	jwtToken, err := middleware.GenerateJWT(user.ID)
+	jwtToken, err := middleware.GenerateJWT(user.ID, user.NickName)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to create token",
@@ -84,17 +83,14 @@ func Login(c *gin.Context) {
 
 	c.SetSameSite(http.SameSiteLaxMode)
 	c.SetCookie("Authorization", jwtToken, 3600*24*30, "/", "localhost", false, true)
-	c.JSON(http.StatusOK, gin.H{
-		"userid": user.ID,
-		"name":   user.Name,
-	},
-	)
+	user = middleware.UserDtoToUser(&user)
+	c.JSON(http.StatusOK, user)
 
 }
 
 func Logout(c *gin.Context) {
 	var body struct {
-		email string
+		Email string
 	}
 	if c.Bind(&body) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -103,7 +99,7 @@ func Logout(c *gin.Context) {
 		return
 	}
 	var user models.User
-	initializers.DB.First(&user, "email = ?", body.email)
+	initializers.DB.First(&user, "email = ?", body.Email)
 	if user.ID == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid email or password",
@@ -119,7 +115,8 @@ func Logout(c *gin.Context) {
 
 func Sendmail(c *gin.Context) {
 	var body struct {
-		email string
+		Email   string
+		Subject string
 	}
 	if c.Bind(&body) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -127,24 +124,47 @@ func Sendmail(c *gin.Context) {
 		})
 		return
 	}
-	code := middleware.SendEmail(
-		"Email verification",
-		"<h1>Your verification code: </h1> <h2>",
-		body.email,
-	)
-	c.JSON(http.StatusOK, gin.H{
-		"code": code,
-	})
-	var user models.User
-	initializers.DB.First(&user, "email = ?", body.email)
-	if user.ID == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid email or password",
+	if body.Subject == "Email verification" {
+		code := middleware.SendEmail(
+			"Email verification",
+			"<h1>Your verification code: </h1> <h2>",
+			body.Email,
+		)
+		c.JSON(http.StatusOK, gin.H{
+			"code": code,
 		})
-		return
+		var user models.User
+		initializers.DB.First(&user, "email = ?", body.Email)
+		if user.ID == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "Invalid email or password",
+			})
+			return
+		}
+		user.ActivationCode = code
+		initializers.DB.Save(&user)
+		c.JSON(http.StatusOK, gin.H{"msg": "Email code sent"})
+	} else if body.Subject == "Password recovery" {
+		code := middleware.SendEmail(
+			"Password recovery",
+			"<h1>Your recovery code: </h1> <h2>",
+			body.Email,
+		)
+		c.JSON(http.StatusOK, gin.H{
+			"code": code,
+		})
+		var user models.User
+		initializers.DB.First(&user, "email = ?", body.Email)
+		if user.ID == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "Invalid email or password",
+			})
+			return
+		}
+		user.ActivationCode = code
+		initializers.DB.Save(&user)
+		c.JSON(http.StatusOK, gin.H{"msg": "Recovery code sent"})
 	}
-	user.ActivationCode = code
-	initializers.DB.Save(&user)
 }
 
 func Validate(c *gin.Context) {
@@ -156,8 +176,8 @@ func Validate(c *gin.Context) {
 
 func VerifyEmail(c *gin.Context) {
 	var body struct {
-		code  int
-		email string
+		Code  int
+		Email string
 	}
 	if c.Bind(&body) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -166,7 +186,7 @@ func VerifyEmail(c *gin.Context) {
 		return
 	}
 	var user models.User
-	initializers.DB.First(&user, "email = ?", body.email)
+	initializers.DB.First(&user, "email = ?", body.Email)
 	if user.ID == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid email or password",
@@ -177,7 +197,115 @@ func VerifyEmail(c *gin.Context) {
 	initializers.DB.Save(&user)
 	c.JSON(http.StatusOK, gin.H{
 		"msg":  "verified",
-		"body": body.email,
+		"body": body.Email,
 	})
 
+}
+
+func RecoverPassword(c *gin.Context) {
+	var Body struct {
+		Email       string
+		NewPassword string
+		Code        int
+	}
+	if c.Bind(&Body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to read body in RecoverPassword",
+		})
+		return
+	}
+	var user models.User
+	initializers.DB.First(&user, "email = ?", Body.Email)
+	if user.ID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid email",
+		})
+		return
+	}
+	if user.ActivationCode != Body.Code {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid code",
+		})
+		return
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(Body.NewPassword), 10)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to hash password",
+		})
+		return
+	}
+	user.Password = string(hash)
+	user.ActivationCode = 0
+	initializers.DB.Save(&user)
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "Password changed",
+	})
+
+}
+
+func GetUser(c *gin.Context) {
+	var Body struct {
+		NickName string
+		Email    string
+	}
+	if c.Bind(&Body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to read body in RecoverPassword",
+		})
+		return
+	}
+	var user models.User
+	err := initializers.DB.Where("nick_name = ? OR email = ?", Body.NickName, Body.Email).First(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "User not found",
+			})
+			return
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error()})
+		return
+	} else {
+		user = middleware.UserDtoToUser(&user)
+		c.JSON(http.StatusOK, user)
+	}
+}
+
+func UpdateUser(c *gin.Context) {
+	var Body struct {
+		Name         string
+		NickName     string
+		Email        string
+		Device_hear  string
+		Device_voice string
+	}
+	if c.Bind(&Body) != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Failed to read body in RecoverPassword",
+		})
+		return
+	}
+	var user models.User
+	err := initializers.DB.Where("nick_name = ? OR email = ?", Body.NickName, Body.Email).First(&user).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "User not found",
+			})
+			return
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error()})
+		return
+	} else {
+		user.Name = Body.Name
+		user.NickName = Body.NickName
+		user.Device_hear = Body.Device_hear
+		user.Device_voice = Body.Device_voice
+		initializers.DB.Save(&user)
+		user = middleware.UserDtoToUser(&user)
+		c.JSON(http.StatusOK, user)
+	}
 }

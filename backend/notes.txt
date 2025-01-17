@@ -1,0 +1,3 @@
+NickName = "James"
+chats:=[]string {"John" , "Adam", "David"} 
+rooms in websockets will be created as follows  = rooms {name : "James&John"}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/torgoMarket/Chatly/backend/middleware"
 )
 
 type Handler struct {
@@ -19,18 +20,18 @@ func NewHandler(h *Hub) *Handler {
 
 type CreateRoomReq struct {
 	ID   string `json:"id"`
-	Name string `json:"name"`
+	Name string `json:"name"` // recipi
 }
 
 func (h *Handler) CreateRoom(c *gin.Context) {
 	var req CreateRoomReq
+	user := middleware.ParseToken(c)
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"err": err.Error(),
 		})
 		return
 	}
-	// save chat in db
 	h.hub.mu.Lock()
 	defer h.hub.mu.Unlock()
 
@@ -38,11 +39,11 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 		c.JSON(http.StatusConflict, gin.H{"error": "Room already exists"})
 		return
 	}
-
+	rname := req.Name + "&" + user.NickName
 	h.hub.Rooms[req.ID] = &Room{
 		ID:      req.ID, // should get from fend
-		Name:    req.Name,
-		Clients: make(map[string]*Client),
+		Name:    rname,
+		Clients: make([]*Client, 0),
 	}
 	c.JSON(http.StatusOK, req)
 }
@@ -51,14 +52,20 @@ var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 	CheckOrigin: func(r *http.Request) bool {
-		//origin := r.Header.Get("Origin")
-		//return origin== "http://localhost:3000"
-		return true
+		origin := r.Header.Get("Origin")
+		switch origin {
+		case "http://localhost:3000":
+			return true
+		case "http://localhost:5173":
+			return true
+		default:
+			return true // for test(dev- false)
+		}
 	},
 }
 
 func (h *Handler) JoinRoom(c *gin.Context) {
-	roomID := c.Param("roomid")
+	roomID := c.Query("roomid")
 	clientID := c.Query("userid")
 	username := c.Query("username")
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
@@ -66,6 +73,7 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	//registering new client
 	cl := &Client{
 		ID:       clientID,
 		Username: username,
@@ -74,18 +82,17 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 		Conn:     conn,
 	}
 	h.hub.Register <- cl
-
 	// send to frontend that user is online instead
 	m := &Message{
 		Content:  username + " has joined the room",
 		RoomID:   roomID,
-		Username: username,
+		Username: "Admin",
 	}
 
 	h.hub.Broadcast <- m
 
+	go cl.readMessage(h.hub)
 	go cl.writeMessage()
-	cl.readMessage(h.hub)
 }
 
 type RoomRes struct {
@@ -106,23 +113,23 @@ func (h *Handler) GetRooms(c *gin.Context) {
 }
 
 type ClientRes struct {
-	ID       string `json:"id"`
-	Username string `json:"username"`
+	ID map[string][]string `json:"id"`
 }
 
 func (h *Handler) GetClients(c *gin.Context) {
-	var clients []ClientRes
+	var clients ClientRes
+	clients.ID = make(map[string][]string)
 	roomId := c.Param("roomId")
-	if _, ok := h.hub.Rooms[roomId]; !ok {
-		clients = make([]ClientRes, 0)
-		c.JSON(http.StatusOK, clients)
+	h.hub.mu.Lock()
+	room, ok := h.hub.Rooms[roomId]
+	h.hub.mu.Unlock()
+	if !ok {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Room not found"})
 	}
-
-	for _, c := range h.hub.Rooms[roomId].Clients {
-		clients = append(clients, ClientRes{
-			ID:       c.ID,
-			Username: c.Username,
-		})
+	for _, cl := range room.Clients {
+		clients.ID[roomId] = append(clients.ID[roomId], cl.Username)
 	}
-	c.JSON(http.StatusOK, clients)
+	c.JSON(http.StatusOK, gin.H{
+		"msg": clients,
+	})
 }

@@ -44,10 +44,43 @@ func RequireAuth(c *gin.Context) {
 	}
 }
 
-func GenerateJWT(userID uint) (string, error) {
+type User struct {
+	NickName string
+	ID       uint
+}
+
+func ParseToken(c *gin.Context) *User {
+	tokenString, _ := c.Cookie("Authorization")
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method : %v", token.Header["alg"])
+		}
+		return []byte(os.Getenv("CRYPTO")), nil
+	})
+
+	if err != nil {
+		c.AbortWithStatus(http.StatusUnauthorized)
+	}
+
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		if float64(time.Now().Unix()) > claims["exp"].(float64) {
+			c.AbortWithStatus(http.StatusUnauthorized)
+		}
+		user1 := &User{
+			ID:       uint(claims["sub"].(float64)),
+			NickName: claims["nickname"].(string),
+		}
+		return user1
+	} else {
+		c.AbortWithStatus(http.StatusUnauthorized)
+	}
+	return nil
+}
+func GenerateJWT(userID uint, nickname string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": userID,
-		"exp": time.Now().Add(time.Hour * 24 * 30).Unix(),
+		"sub":      userID,
+		"nickname": nickname,
+		"exp":      time.Now().Add(time.Hour * 24 * 30).Unix(),
 	})
 	tokenString, err := token.SignedString([]byte(os.Getenv("CRYPTO")))
 	if err != nil {

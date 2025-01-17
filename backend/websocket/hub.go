@@ -5,9 +5,9 @@ import (
 )
 
 type Room struct {
-	ID      string             `json:"id"`
-	Name    string             `json:"name"`
-	Clients map[string]*Client `json:"clients"`
+	ID      string    `json:"id"`
+	Name    string    `json:"name"`
+	Clients []*Client `json:"clients"`
 }
 
 type Hub struct {
@@ -49,12 +49,12 @@ func (h *Hub) addClientToRoom(client *Client) {
 	if !exists {
 		room = &Room{
 			ID:      client.RoomID,
-			Clients: make(map[string]*Client),
+			Clients: make([]*Client, 0),
 		}
 		h.Rooms[client.RoomID] = room
 	}
 
-	room.Clients[client.ID] = client
+	room.Clients = append(room.Clients, client)
 }
 
 func (h *Hub) removeClientFromRoom(client *Client) {
@@ -66,7 +66,14 @@ func (h *Hub) removeClientFromRoom(client *Client) {
 		return
 	}
 
-	delete(room.Clients, client.ID)
+	room.Clients = append(room.Clients[:2], room.Clients[3:]...) // delete client from room
+	for i, cl := range room.Clients {
+		if cl.Username == client.Username {
+			room.Clients = append(room.Clients[:i], room.Clients[i+1:]...)
+			break
+		}
+	}
+
 	if len(room.Clients) == 0 {
 		delete(h.Rooms, client.RoomID)
 	}

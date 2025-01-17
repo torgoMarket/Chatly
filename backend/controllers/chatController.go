@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,4 +22,25 @@ func CreateChat(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Chat created successfully"})
 }
 func GetChatHistory() {}
-func GetChats()       {}
+func GetChats(c *gin.Context) {
+
+	var chats []models.Chat
+	err := initializers.DB.Joins("JOIN user_chats ON user_chats.chat_id = chats.id").
+		Joins("JOIN users ON users.id = user_chats.user_id").
+		Where("users.nick_name = ?", "Asad").
+		Preload("Members").
+		Find(&chats).Error
+
+	if err != nil {
+		panic(err)
+	}
+
+	// Вывод результата
+	for _, chat := range chats {
+		fmt.Printf("Chat ID: %d, Name: %s\n", chat.ID, chat.Name)
+		for _, member := range chat.Members {
+			fmt.Printf(" - Member: %s\n", member.Name)
+		}
+	}
+	c.JSON(http.StatusOK, chats)
+}
