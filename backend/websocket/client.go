@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gorilla/websocket"
+	"github.com/torgoMarket/Chatly/backend/initializers"
 )
 
 type Client struct {
@@ -15,9 +16,12 @@ type Client struct {
 }
 
 type Message struct {
+	ID       string `json:"Id"`
+	UserID   string `json:"userId`
 	RoomID   string `json:"roomId`
 	Username string `json:"username`
 	Content  string `json:"content`
+	SeenTime string `json:"seenTime`
 }
 
 // var (
@@ -25,7 +29,7 @@ type Message struct {
 // 	pingPeriod = (pongWait * 9) / 10
 // )
 
-func (c *Client) writeMessage() {
+func (c *Client) writeMessage(roomID string) {
 	defer func() {
 		c.Conn.Close()
 	}()
@@ -62,6 +66,7 @@ func (c *Client) readMessage(hub *Hub) {
 	c.Conn.SetReadLimit(512)
 	//c.Conn.SetPongHandler(c.pongHandler())
 
+	//change seent time of message in db
 	for {
 		_, m, err := c.Conn.ReadMessage()
 		// _ is message type that can be recieved
@@ -71,6 +76,8 @@ func (c *Client) readMessage(hub *Hub) {
 			}
 			break
 		}
+		//------------------------------------
+		initializers.DB.Table("chat_"+c.RoomID).Where("id = ?", "1").Update("seen_time", "now()") // update seen time of message
 		msg := &Message{
 			Content:  string(m),
 			RoomID:   c.RoomID,

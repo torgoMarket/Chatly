@@ -1,9 +1,0 @@
-.chatList {
-	@apply w-full flex flex-col gap-2 overflow-y-scroll;
-
-	&::-webkit-scrollbar {
-		display: none;
-	}
-	-ms-overflow-style: none;
-	scrollbar-width: none;
-}

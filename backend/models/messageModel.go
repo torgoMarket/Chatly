@@ -11,4 +11,6 @@ type Message struct {
 	Content   string    `gorm:"not null;size:500"`
 	UserID    uint      `gorm:"not null"`
 	CreatedAt time.Time `gorm:"autoCreateTime"`
+	SeenTime  time.Time
+	Edited    bool `gorm:"default:false"`
 }
