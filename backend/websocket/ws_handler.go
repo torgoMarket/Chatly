@@ -5,7 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/torgoMarket/Chatly/backend/controllers"
+	"github.com/torgoMarket/Chatly/backend/initializers"
 	"github.com/torgoMarket/Chatly/backend/middleware"
+	"github.com/torgoMarket/Chatly/backend/models"
 )
 
 type Handler struct {
@@ -20,7 +23,7 @@ func NewHandler(h *Hub) *Handler {
 
 type CreateRoomReq struct {
 	ID   string `json:"id"`
-	Name string `json:"name"` // recipi
+	Name string `json:"name"` // receiver`s nick-name
 }
 
 func (h *Handler) CreateRoom(c *gin.Context) {
@@ -40,6 +43,14 @@ func (h *Handler) CreateRoom(c *gin.Context) {
 		return
 	}
 	rname := req.Name + "&" + user.NickName
+	// check if chat already exists
+	var chatinfo models.Chat
+	initializers.DB.Table("chats").First(&chatinfo, "name=?", rname)
+
+	if chatinfo.ID == 0 {
+		controllers.CreateChat(c, rname)
+	}
+
 	h.hub.Rooms[req.ID] = &Room{
 		ID:      req.ID, // should get from fend
 		Name:    rname,
@@ -83,16 +94,17 @@ func (h *Handler) JoinRoom(c *gin.Context) {
 	}
 	h.hub.Register <- cl
 	// send to frontend that user is online instead
-	m := &Message{
-		Content:  username + " has joined the room",
-		RoomID:   roomID,
-		Username: "Admin",
-	}
+	// m := &Message{
+	// 	UserID:   clientID,
+	// 	RoomID:   roomID,
+	// 	Content:  username + " has joined the room",
+	// 	Username: "Admin",
+	// }
 
-	h.hub.Broadcast <- m
+	// h.hub.Broadcast <- m
 
 	go cl.readMessage(h.hub)
-	go cl.writeMessage()
+	go cl.writeMessage(cl.RoomID)
 }
 
 type RoomRes struct {

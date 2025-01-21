@@ -11,6 +11,12 @@ import (
 	"gorm.io/gorm"
 )
 
+func GetUsers(c *gin.Context) {
+	var users []models.User
+	initializers.DB.Find(&users)
+	c.JSON(http.StatusOK, users)
+}
+
 func SignUp(c *gin.Context) {
 	var body struct {
 		Name     string
@@ -35,8 +41,9 @@ func SignUp(c *gin.Context) {
 	user := models.User{Name: body.Name, Email: body.Email, Password: string(hash), NickName: body.NickName, Device_hear: "", Device_voice: "", ColorID: 0}
 	result := initializers.DB.Create(&user)
 	if result.Error != nil {
+
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": result.Error,
+			"error": result.Error.Error(),
 		})
 		return
 	}

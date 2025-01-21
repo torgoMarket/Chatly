@@ -32,11 +32,19 @@ func InitRouter(wsHandler *websocket.Handler) { //userHandler *userHandler,
 	r.POST("/logout", controllers.Logout)
 	r.POST("/sendmail", controllers.Sendmail)
 	r.POST("/vermail", controllers.VerifyEmail)
+	r.GET("/getusers", controllers.GetUsers)
+	r.GET("/recover", controllers.RecoverPassword)
+	//r.POST("/reset", controllers.ResetPassword) // have to implement
+	r.POST("/update", controllers.UpdateUser)
 
-	r.POST("/ws/createroom", wsHandler.CreateRoom)
+	r.POST("/ws/createroom", middleware.RequireAuth, wsHandler.CreateRoom)
 	r.GET("/ws/joinroom", wsHandler.JoinRoom)
 	r.GET("/ws/getrooms", wsHandler.GetRooms)
 	r.GET("/ws/getclients/:roomId", wsHandler.GetClients)
+
+	r.POST("/ws/getchathistory", controllers.GetMessagesofChat)
+	r.GET("/ws/getchats", controllers.GetChats)
+
 }
 
 func Start(addr string) error {
