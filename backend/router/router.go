@@ -33,6 +33,7 @@ func InitRouter(wsHandler *websocket.Handler) { //userHandler *userHandler,
 	r.POST("/sendmail", controllers.Sendmail)
 	r.POST("/vermail", controllers.VerifyEmail)
 	r.GET("/getusers", controllers.GetUsers)
+	r.POST("/getuser", controllers.GetUser)
 	r.GET("/recover", controllers.RecoverPassword)
 	//r.POST("/reset", controllers.ResetPassword) // have to implement
 	r.POST("/update", controllers.UpdateUser)
