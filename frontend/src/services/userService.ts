@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import { $api } from '../api'
-import { TUserLogin, TUserRegister } from '../types/userTypes'
+import { TUserLogin, TUserRecover, TUserRegister } from '../types/userTypes'
 
 interface IResponse extends AxiosResponse {
 	response: {
@@ -18,7 +18,8 @@ export const registerUser = async (userData: TUserRegister) => {
 		const response = await $api.post('/signup', {
 			Name: userData.name,
 			Email: userData.email,
-			password: userData.password,
+			Password: userData.password,
+			NickName: userData.nickName,
 		})
 
 		return response
@@ -67,8 +68,40 @@ export const logoutUser = async (email: string) => {
 
 export const getUserInfo = async () => {
 	try {
-		const response = await $api.get('/val')
+		const response = await $api.get('/getuserinfo')
 		return response.data
+	} catch (error: unknown) {
+		if (axios.isAxiosError(error)) {
+			const axiosError = error as unknown as IResponse
+			return axiosError.response
+		}
+	}
+}
+
+export const sendMail = async (email: string, subject: string) => {
+	try {
+		const response = await $api.post('/sendmail', {
+			Email: email,
+			Subject: subject,
+		})
+		return response as AxiosResponse
+	} catch (error: unknown) {
+		if (axios.isAxiosError(error)) {
+			const axiosError = error as unknown as IResponse
+			return axiosError.response
+		}
+	}
+}
+
+export const checkCodeFromMail = async (recoverData: TUserRecover) => {
+	console.log(recoverData)
+	try {
+		const response = await $api.post('/recover', {
+			Email: recoverData.email,
+			Code: recoverData.code,
+			NewPassword: recoverData.newPassword,
+		})
+		return response as AxiosResponse
 	} catch (error: unknown) {
 		if (axios.isAxiosError(error)) {
 			const axiosError = error as unknown as IResponse

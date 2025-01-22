@@ -1,12 +1,31 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useGetUserInfo } from '../hooks/queries/useGetUserInfo'
 
 export const Test = () => {
 	const [messages, setMessages] = useState([])
 
-	const ws = new WebSocket(
-		`ws://localhost:3000/ws/joinroom?roomid=1userid=11&username=Amir`
-	)
+	const { user } = useGetUserInfo()
+	console.log('user', user)
+
+	const [conn, setConn] = useState(null)
+
+	useEffect(() => {
+		if (user) {
+			const ws = new WebSocket(
+				`ws://localhost:3000/ws/joinroom?roomid=2&userid=${user?.id}&username=${
+					user?.id === 43 ? 'Amir12' : 'Amir12345'
+				}`
+			)
+			setConn(ws)
+
+			ws.onmessage = event => {
+				const messageData = JSON.parse(event.data)
+				console.log('Received message:', messageData)
+				// You can process or display the message as needed
+			}
+		}
+	}, [user])
 
 	// Handle Logout request
 	const logout = async () => {
@@ -42,7 +61,7 @@ export const Test = () => {
 	// Send message to WebSocket server
 	const SendMessage = () => {
 		const message = 'Hello, Server!'
-		socket.emit('message', message)
+		conn.send('message')
 		console.log('Message sent:', message)
 	}
 
@@ -69,7 +88,7 @@ export const Test = () => {
 			const response = await axios.post(
 				'http://localhost:3000/ws/createroom',
 				{
-					ID: '1',
+					ID: '2',
 					Name: 'Amir',
 				},
 				{
@@ -85,13 +104,12 @@ export const Test = () => {
 	// Join a room via API
 	const joinRoom = async () => {
 		try {
-			const response = await axios.get(
-				`http://localhost:3000/ws/joinroom?roomid=1&userid=11&username=Amir`,
-				{ withCredentials: true }
-			)
-			console.log('Join room response:', response)
+			const response = await axios.post('http://localhost:3000/getuser', {
+				NickName: 'Amir12345',
+			})
+			console.log('Get rooms response:', response)
 		} catch (error) {
-			console.error('Error joining room:', error)
+			console.error('Error fetching rooms:', error)
 		}
 	}
 

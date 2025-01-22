@@ -1,8 +1,8 @@
 export type TUser = {
 	id: number
 	name: string
+	nickName: string
 	email: string
-	password: string
 	tag: string
 	device_hear: string
 	device_voice: string
@@ -10,7 +10,15 @@ export type TUser = {
 	color: string
 }
 
-export type TUserRegister = Pick<TUser, 'name' | 'email' | 'password'> & {
-	repeatPassword?: string
+export type TUserRegister = Pick<TUser, 'name' | 'email' | 'nickName'> & {
+	password: string
+	repeatPassword: string
 }
-export type TUserLogin = Pick<TUser, 'email' | 'password'>
+export type TUserLogin = Pick<TUser, 'email'> & {
+	password: string
+}
+
+export type TUserRecover = Pick<TUser, 'email'> & {
+	newPassword: string
+	code: number
+}

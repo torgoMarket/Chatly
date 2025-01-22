@@ -12,6 +12,7 @@ import styles from './Register.module.scss'
 
 const registerFields = [
 	{ field: 'name', placeholder: 'Name', type: 'text' },
+	{ field: 'nickName', placeholder: 'Nickname', type: 'text' },
 	{ field: 'email', placeholder: 'Email', type: 'email' },
 	{ field: 'password', placeholder: 'Password', type: 'password' },
 	{ field: 'repeatPassword', placeholder: 'Repeat Password', type: 'password' },
@@ -21,6 +22,7 @@ export const Register = () => {
 	const navigate = useNavigate()
 	const [userData, setUserData] = useState<TUserRegister>({
 		name: '',
+		nickName: '',
 		email: '',
 		password: '',
 		repeatPassword: '',

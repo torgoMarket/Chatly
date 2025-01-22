@@ -5,29 +5,47 @@ import { Field } from '../../components/Layouts/Field/Field'
 import { Button } from '../../components/UI/Button/Button'
 import { Input } from '../../components/UI/Input/Input'
 import { useValidate } from '../../hooks/useValidate'
+import { checkCodeFromMail, sendMail } from '../../services/userService'
 import styles from './Recover.module.scss'
 export const Recover = () => {
 	const navigate = useNavigate()
 	const [stage, setStage] = useState<number>(0)
 
-	const [data, setData] = useState({
+	const [recoverData, setRecoverData] = useState({
 		email: '',
+		code: '',
 		password: '',
 		repeatPassword: '',
 	})
 
-	const { error } = useValidate(data)
+	const { error } = useValidate(recoverData)
 
-	const handleForm = () => {
+	const handleForm = async () => {
 		if (stage === 0) {
 			if (!error.email) {
-				setStage(1)
+				const response = await sendMail(recoverData.email, 'Email verification')
+
+				if (response?.status === 200) {
+					setStage(1)
+				}
 			}
 		}
 
 		if (stage === 1) {
 			if (!error.password && !error.repeatPassword) {
-				navigate('/login')
+				const { email, password, code } = recoverData
+
+				const response = await checkCodeFromMail({
+					email,
+					newPassword: password,
+					code: Number(code),
+				})
+
+				console.log('response', response)
+
+				if (response?.status === 200) {
+					navigate('/login')
+				}
 			}
 		}
 	}
@@ -43,19 +61,33 @@ export const Recover = () => {
 							type='email'
 							placeholder='Email'
 							scale='md'
-							onChange={e => setData({ ...data, email: e.target.value })}
+							onChange={e =>
+								setRecoverData({ ...recoverData, email: e.target.value })
+							}
 						/>
 					</Field>
 				)}
 
 				{stage === 1 && (
 					<>
+						<Field error={error.email as string}>
+							<Input
+								type='number'
+								placeholder='Code'
+								scale='md'
+								onChange={e =>
+									setRecoverData({ ...recoverData, code: e.target.value })
+								}
+							/>
+						</Field>
 						<Field error={error.password as string}>
 							<Input
 								type='password'
 								placeholder='Password'
 								scale='md'
-								onChange={e => setData({ ...data, password: e.target.value })}
+								onChange={e =>
+									setRecoverData({ ...recoverData, password: e.target.value })
+								}
 							/>
 						</Field>
 						<Field error={error.repeatPassword as string}>
@@ -64,7 +96,10 @@ export const Recover = () => {
 								placeholder='Repeat Password'
 								scale='md'
 								onChange={e =>
-									setData({ ...data, repeatPassword: e.target.value })
+									setRecoverData({
+										...recoverData,
+										repeatPassword: e.target.value,
+									})
 								}
 							/>
 						</Field>
