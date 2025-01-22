@@ -1,4 +1,3 @@
-import avatar1 from '../../../assets/images/avatar1.png'
 import styles from './CurrentChatUserInfo.module.scss'
 
 interface CurrentChatUserInfoProps {
@@ -12,7 +11,7 @@ export const CurrentChatUserInfo: React.FC<CurrentChatUserInfoProps> = ({
 }) => {
 	return (
 		<div className={styles.currentChatUserInfo}>
-			<img src={avatar1} alt='avatar' />
+			{/* <img src={avatar1} alt='avatar' /> */}
 			<div className={styles.info}>
 				<h3 className={styles.name}>{name}</h3>
 				<p className={styles.seen}>{seen}</p>

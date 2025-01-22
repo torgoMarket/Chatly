@@ -4,8 +4,8 @@
 	.avatar {
 		@apply h-full flex items-center justify-center;
 
-		img {
-			@apply w-10 h-10 object-cover rounded-full;
+		.img {
+			@apply h-10 w-10 rounded-full bg-orange-300 flex items-center justify-center;
 		}
 	}
 

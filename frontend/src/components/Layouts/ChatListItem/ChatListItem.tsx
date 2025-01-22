@@ -1,5 +1,6 @@
 import { Check, CheckCheck, GripVertical } from 'lucide-react'
 import { useRef } from 'react'
+import { $api } from '../../../api'
 import useSocketStore from '../../../store/socketStore'
 import styles from './ChatListItem.module.scss'
 
@@ -31,13 +32,20 @@ export const ChatListItem: React.FC<ChatListItemProps> = ({
 }) => {
 	const dragHandleRef = useRef<HTMLDivElement | null>(null)
 	const setSocket = useSocketStore(state => state.setSocket)
+	const setCurrentChat = useSocketStore(state => state.setCurrentChat)
 
 	const switchChat = async () => {
+		const response = await $api.post('/ws/createroom', {
+			ID: `${((id + userId) * (id + userId + 1)) / 2 + userId}`,
+			Name: nickName,
+		})
+
 		const socket = new WebSocket(
 			`ws://localhost:3000/ws/joinroom?roomid=8&userid=${userId}&username=${nickName}`
 		)
 
 		setSocket(socket)
+		setCurrentChat({ id, name })
 	}
 
 	return (

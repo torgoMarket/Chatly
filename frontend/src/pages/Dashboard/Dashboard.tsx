@@ -15,6 +15,7 @@ import { useGetUserInfo } from '../../hooks/queries/useGetUserInfo'
 import { useCheckAuth } from '../../hooks/useCheckAuth'
 import { useToggle } from '../../hooks/useToggle'
 import { getChats } from '../../services/chatService'
+import useSocketStore from '../../store/socketStore'
 export const Dashboard = () => {
 	useCheckAuth()
 
@@ -44,6 +45,8 @@ export const Dashboard = () => {
 		return () => clearTimeout(delayDebounceFn)
 	}, [search])
 
+	const currentChat = useSocketStore(state => state.currentChat)
+
 	useEffect(() => {
 		debounceSearch()
 	}, [search, debounceSearch])
@@ -55,7 +58,7 @@ export const Dashboard = () => {
 		<Container>
 			<Actionbar>
 				<BurgerBtn isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-				<CurrentChatUserInfo seen='12:20' name='Amir' />
+				<CurrentChatUserInfo seen='' name={currentChat?.name} />
 				<DeviceControl isMicOn={true} isHeadsetOn={true} />
 			</Actionbar>
 
@@ -69,10 +72,14 @@ export const Dashboard = () => {
 				</Field>
 
 				<ChatList chatList={chatList} userId={user?.id} />
-				<Profile avatar={user?.Color?.Name} name='Amir' tag='#amiryuld' />
+				<Profile
+					color={user?.color?.Name}
+					name={user?.name}
+					nickname={user?.nickname}
+				/>
 			</Sidebar>
-			<Chat />
-			<TextBox />
+			<Chat userId={user?.id} />
+			<TextBox userId={user?.id} />
 		</Container>
 	)
 }

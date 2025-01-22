@@ -11,8 +11,6 @@ export const ChatList = ({ chatList, userId }) => {
 		console.log(`Item dropped on id: ${id}`)
 	}
 
-	console.log('chatList', chatList)
-
 	return (
 		<div className={styles.chatList}>
 			{chatList ? (
@@ -20,6 +18,7 @@ export const ChatList = ({ chatList, userId }) => {
 					chatItem =>
 						chatItem.ID != userId && (
 							<ChatListItem
+								key={chatItem.ID}
 								id={chatItem.ID}
 								avatar={avatar1}
 								name={chatItem.Name}
