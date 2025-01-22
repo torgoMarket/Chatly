@@ -6,4 +6,8 @@
 	}
 	-ms-overflow-style: none;
 	scrollbar-width: none;
+
+	.noChatsText {
+		@apply text-text pl-4 text-balance;
+	}
 }

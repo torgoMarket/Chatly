@@ -3,12 +3,13 @@ import { Send, Smile } from 'lucide-react'
 import React, { useRef, useState } from 'react'
 import { emojiCategories, emojis } from '../../../constants/emojiPack.ts'
 import { useToggle } from '../../../hooks/useToggle'
+import useSocketStore from '../../../store/socketStore.ts'
 import styles from './TextBox.module.scss'
 
 export const TextBox: React.FC = () => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 	const [message, setMessage] = useState('')
-
+	const socket = useSocketStore(state => state.socket)
 	const { isOpen, toggle } = useToggle(false)
 	const [activeEmojiCategory, setEmojiCategory] = useState<string>('face')
 
@@ -25,6 +26,11 @@ export const TextBox: React.FC = () => {
 		handleInput()
 	}
 
+	const sendMessage = () => {
+		socket.send(message)
+		console.log('Message sent:', message)
+	}
+
 	return (
 		<div className={styles.textBox}>
 			<textarea
@@ -36,7 +42,10 @@ export const TextBox: React.FC = () => {
 				className={clsx(styles.textarea, isOpen && 'mb-24 border-b')}
 			/>
 			<Smile className={clsx(styles.icon, styles.emoji)} onClick={toggle} />
-			<Send className={clsx(styles.icon, styles.send)} />
+			<Send
+				className={clsx(styles.icon, styles.send)}
+				onClick={() => sendMessage()}
+			/>
 			<div className={clsx(styles.emojiPack, isOpen && '!flex')}>
 				<ul className={styles.emojiCategoriesList}>
 					{emojiCategories.map((category: string) => (

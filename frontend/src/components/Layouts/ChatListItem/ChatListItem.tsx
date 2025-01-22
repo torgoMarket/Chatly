@@ -1,5 +1,6 @@
 import { Check, CheckCheck, GripVertical } from 'lucide-react'
 import { useRef } from 'react'
+import useSocketStore from '../../../store/socketStore'
 import styles from './ChatListItem.module.scss'
 
 interface ChatListItemProps {
@@ -11,6 +12,8 @@ interface ChatListItemProps {
 	onDragStart: (id: string) => void
 	onDrop: (id: string) => void
 	id: string
+	search: boolean
+	userId: string
 }
 
 export const ChatListItem: React.FC<ChatListItemProps> = ({
@@ -22,14 +25,27 @@ export const ChatListItem: React.FC<ChatListItemProps> = ({
 	onDragStart,
 	onDrop,
 	id,
+	search,
+	userId,
+	nickName,
 }) => {
 	const dragHandleRef = useRef<HTMLDivElement | null>(null)
+	const setSocket = useSocketStore(state => state.setSocket)
+
+	const switchChat = async () => {
+		const socket = new WebSocket(
+			`ws://localhost:3000/ws/joinroom?roomid=8&userid=${userId}&username=${nickName}`
+		)
+
+		setSocket(socket)
+	}
 
 	return (
 		<div
 			className={styles.chatListItem}
 			onDragOver={e => e.preventDefault()}
 			onDrop={() => onDrop(id)}
+			onClick={() => switchChat()}
 		>
 			<div
 				className={styles.dragHandle}
@@ -56,14 +72,16 @@ export const ChatListItem: React.FC<ChatListItemProps> = ({
 					{message && message.slice(0, 18)} {message.length > 18 && '...'}
 				</div>
 			</div>
-			<div className={styles.info}>
-				<div className={styles.time}>{time}</div>
-				{checked ? (
-					<CheckCheck className={styles.checked} />
-				) : (
-					<Check className={styles.checked} />
-				)}
-			</div>
+			{!search && (
+				<div className={styles.info}>
+					<div className={styles.time}>{time}</div>
+					{checked ? (
+						<CheckCheck className={styles.checked} />
+					) : (
+						<Check className={styles.checked} />
+					)}
+				</div>
+			)}
 		</div>
 	)
 }

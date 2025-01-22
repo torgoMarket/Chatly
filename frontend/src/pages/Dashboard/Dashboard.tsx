@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react'
 import { Actionbar } from '../../components/Actionbar/Actionbar'
 import { Chat } from '../../components/Chat/Chat'
 import { ChatList } from '../../components/ChatList/ChatList'
@@ -13,8 +14,39 @@ import { Input } from '../../components/UI/Input/Input'
 import { useGetUserInfo } from '../../hooks/queries/useGetUserInfo'
 import { useCheckAuth } from '../../hooks/useCheckAuth'
 import { useToggle } from '../../hooks/useToggle'
+import { getChats } from '../../services/chatService'
 export const Dashboard = () => {
 	useCheckAuth()
+
+	const [search, setSearch] = useState<string>('')
+	const [chatList, setChatList] = useState(null)
+
+	const debounceSearch = useCallback(() => {
+		const handleSearch = async () => {
+			const response = await getChats(search)
+			if (response?.status === 200) {
+				setChatList(response.data)
+			}
+
+			if (response?.status === 400) {
+				setChatList(user?.chats)
+			}
+		}
+
+		const delayDebounceFn = setTimeout(() => {
+			if (search) {
+				handleSearch()
+			} else {
+				setChatList(user?.chats)
+			}
+		}, 1000)
+
+		return () => clearTimeout(delayDebounceFn)
+	}, [search])
+
+	useEffect(() => {
+		debounceSearch()
+	}, [search, debounceSearch])
 
 	const { isOpen: isSidebarOpen, toggle: toggleSidebar } = useToggle(true)
 	const { user } = useGetUserInfo()
@@ -29,10 +61,14 @@ export const Dashboard = () => {
 
 			<Sidebar isOpen={isSidebarOpen}>
 				<Field className='p-4'>
-					<Input placeholder='Search' scale='lg' />
+					<Input
+						placeholder='Search'
+						scale='lg'
+						onChange={e => setSearch(e.target.value)}
+					/>
 				</Field>
 
-				<ChatList />
+				<ChatList chatList={chatList} userId={user?.id} />
 				<Profile avatar={user?.Color?.Name} name='Amir' tag='#amiryuld' />
 			</Sidebar>
 			<Chat />

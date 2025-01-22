@@ -12,6 +12,7 @@ export const useGetUserInfo = () => {
 
 	useEffect(() => {
 		if (user) {
+			console.log('user', user)
 			for (const key in user) {
 				user[key.toLowerCase()] = user[key]
 				delete user[key]
