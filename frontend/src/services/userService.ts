@@ -1,6 +1,16 @@
 import axios, { AxiosResponse } from 'axios'
 import { $api } from '../api'
-import { TUserLogin, TUserRecover, TUserRegister } from '../types/userTypes'
+import { TChatList } from '../types/chatTypes'
+import {
+	TUser,
+	TUserLogin,
+	TUserRecover,
+	TUserRegister,
+} from '../types/userTypes'
+import {
+	keysToCamelCaseInObject,
+	keysToCamelCaseInObjectOfArray,
+} from '../utils/request'
 
 interface IResponse extends AxiosResponse {
 	response: {
@@ -66,15 +76,12 @@ export const logoutUser = async (email: string) => {
 	}
 }
 
-export const getUserInfo = async () => {
+export const getUserInfo = async (): Promise<TUser> => {
 	try {
 		const response = await $api.get('/getuserinfo')
-		return response.data
-	} catch (error: unknown) {
-		if (axios.isAxiosError(error)) {
-			const axiosError = error as unknown as IResponse
-			return axiosError.response
-		}
+		return keysToCamelCaseInObject(response.data.msg) as TUser
+	} catch {
+		return {} as TUser
 	}
 }
 
@@ -107,5 +114,14 @@ export const checkCodeFromMail = async (recoverData: TUserRecover) => {
 			const axiosError = error as unknown as IResponse
 			return axiosError.response
 		}
+	}
+}
+
+export const getChatsOfUser = async (): Promise<TChatList[]> => {
+	try {
+		const response = await $api.get('/ws/getchatsofuser')
+		return keysToCamelCaseInObjectOfArray(response.data) as TChatList[]
+	} catch {
+		return [] as TChatList[]
 	}
 }

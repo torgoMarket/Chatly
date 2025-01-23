@@ -1,20 +1,14 @@
+import useCurrentChatStore from '../../../store/currentChatStore'
 import styles from './CurrentChatUserInfo.module.scss'
 
-interface CurrentChatUserInfoProps {
-	name: string
-	seen: string
-}
+export const CurrentChatUserInfo = () => {
+	const currentChatInfo = useCurrentChatStore(state => state.currentChatInfo)
 
-export const CurrentChatUserInfo: React.FC<CurrentChatUserInfoProps> = ({
-	name,
-	seen,
-}) => {
 	return (
 		<div className={styles.currentChatUserInfo}>
-			{/* <img src={avatar1} alt='avatar' /> */}
 			<div className={styles.info}>
-				<h3 className={styles.name}>{name}</h3>
-				<p className={styles.seen}>{seen}</p>
+				<h3 className={styles.name}>{currentChatInfo?.name}</h3>
+				{/* <p className={styles.seen}>{currentChatInfo}</p> */}
 			</div>
 		</div>
 	)

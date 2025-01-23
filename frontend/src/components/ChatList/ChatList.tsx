@@ -1,35 +1,60 @@
-import avatar1 from '../../assets/images/avatar1.png'
+import { useEffect, useState } from 'react'
+import { getChatsOfUser } from '../../services/userService'
+import { TChatList } from '../../types/chatTypes'
 import { ChatListItem } from '../Layouts/ChatListItem/ChatListItem'
 import styles from './ChatList.module.scss'
 
-export const ChatList = ({ chatList, userId }) => {
-	const handleDragStart = (id: string) => {
+interface IChatListProps {
+	loggedUserId: number
+	searchedChatList: TChatList[] | null
+}
+
+export const ChatList = ({
+	loggedUserId,
+	searchedChatList,
+}: IChatListProps) => {
+	const handleDragStart = (id: number) => {
 		console.log(`Drag started for item with id: ${id}`)
 	}
 
-	const handleDrop = (id: string) => {
+	const handleDrop = (id: number) => {
 		console.log(`Item dropped on id: ${id}`)
 	}
+
+	const [chatList, setChatList] = useState<TChatList[] | null>(null)
+
+	const getUserChats = async () => {
+		const chatList = await getChatsOfUser()
+		setChatList(chatList)
+	}
+
+	useEffect(() => {
+		if (!searchedChatList) {
+			getUserChats()
+		} else {
+			setChatList(searchedChatList)
+		}
+	}, [searchedChatList])
+
+	console.log('setChatList', searchedChatList)
+
+	console.log(chatList)
 
 	return (
 		<div className={styles.chatList}>
 			{chatList ? (
 				chatList.map(
 					chatItem =>
-						chatItem.ID != userId && (
+						chatItem.id != loggedUserId && (
 							<ChatListItem
-								key={chatItem.ID}
-								id={chatItem.ID}
-								avatar={avatar1}
-								name={chatItem.Name}
-								message=''
-								time=''
-								checked={false}
+								key={chatItem.id}
+								search={searchedChatList ? true : false}
+								loggedUserId={loggedUserId}
+								chatUserId={chatItem.id}
+								name={chatItem.name}
+								lastMessage={chatItem?.lastMessage}
 								onDragStart={handleDragStart}
 								onDrop={handleDrop}
-								search={true}
-								userId={userId}
-								nickName={chatItem.NickName}
 							/>
 						)
 				)

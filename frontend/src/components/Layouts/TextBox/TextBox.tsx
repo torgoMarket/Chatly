@@ -5,13 +5,14 @@ import img from '../../../assets/images/avatar1.png'
 import { emojiCategories, emojis } from '../../../constants/emojiPack.ts'
 import { useChatHistory } from '../../../hooks/queries/useGetChatHistory.ts'
 import { useToggle } from '../../../hooks/useToggle'
-import useSocketStore from '../../../store/socketStore.ts'
+import useCurrentChatStore from '../../../store/currentChatStore.ts'
 import styles from './TextBox.module.scss'
-export const TextBox: React.FC = ({ userId }) => {
+export const TextBox: React.FC = () => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 	const [message, setMessage] = useState('')
-	const socket = useSocketStore(state => state.socket)
-	const { isOpen, toggle } = useToggle(false)
+	const socket = useCurrentChatStore(state => state.socket)
+
+	const { state: isEmojisOpen, toggle: toggleEmojisOpen } = useToggle(false)
 	const [activeEmojiCategory, setEmojiCategory] = useState<string>('face')
 
 	const { refetchChatHistory } = useChatHistory(8)
@@ -31,11 +32,11 @@ export const TextBox: React.FC = ({ userId }) => {
 
 	const sendMessage = async () => {
 		if (!message.trim()) return
-		socket?.send(img) // Send message via socket
+		socket?.send(img)
 		console.log('Message sent:', message)
 
-		await refetchChatHistory() // Refetch chat history after sending
-		setMessage('') // Clear the input
+		await refetchChatHistory()
+		setMessage('')
 	}
 
 	return (
@@ -46,14 +47,17 @@ export const TextBox: React.FC = ({ userId }) => {
 				onChange={handleChange}
 				rows={1}
 				placeholder='Message ...'
-				className={clsx(styles.textarea, isOpen && 'mb-24 border-b')}
+				className={clsx(styles.textarea, isEmojisOpen && 'mb-24 border-b')}
 			/>
-			<Smile className={clsx(styles.icon, styles.emoji)} onClick={toggle} />
+			<Smile
+				className={clsx(styles.icon, styles.emoji)}
+				onClick={toggleEmojisOpen}
+			/>
 			<Send
 				className={clsx(styles.icon, styles.send)}
 				onClick={() => sendMessage()}
 			/>
-			<div className={clsx(styles.emojiPack, isOpen && '!flex')}>
+			<div className={clsx(styles.emojiPack, isEmojisOpen && '!flex')}>
 				<ul className={styles.emojiCategoriesList}>
 					{emojiCategories.map((category: string) => (
 						<li

@@ -7,7 +7,12 @@ export type TUser = {
 	device_hear: string
 	device_voice: string
 	isActivated: boolean
-	color: string
+	color: TColor
+}
+
+type TColor = {
+	id: number
+	name: string
 }
 
 export type TUserRegister = Pick<TUser, 'name' | 'email' | 'nickName'> & {

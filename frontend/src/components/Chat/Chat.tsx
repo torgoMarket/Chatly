@@ -1,12 +1,16 @@
 import { useEffect, useRef } from 'react'
 import { useChatHistory } from '../../hooks/queries/useGetChatHistory'
-import useSocketStore from '../../store/socketStore'
+import useCurrentChatStore from '../../store/currentChatStore'
 import { Message } from '../Layouts/Message/Message'
 import styles from './Chat.module.scss'
 
-export const Chat = ({ userId }) => {
+interface IChatProps {
+	loggedUserId: number
+}
+
+export const Chat = ({ loggedUserId }: IChatProps) => {
 	const endOfChatRef = useRef<HTMLDivElement | null>(null)
-	const socket = useSocketStore(state => state.socket)
+	const socket = useCurrentChatStore(state => state.socket)
 
 	const { chatHistory, refetchChatHistory, isLoading, isError } =
 		useChatHistory(8)
@@ -24,7 +28,7 @@ export const Chat = ({ userId }) => {
 				refetchChatHistory()
 			}
 		}
-	}, [socket, refetchChatHistory])
+	}, [socket, refetchChatHistory, chatHistory])
 
 	if (isLoading) return <p>Loading chat...</p>
 	if (isError) return <p>Error loading chat history.</p>
@@ -44,7 +48,7 @@ export const Chat = ({ userId }) => {
 						<Message
 							key={message.ID}
 							text={message.Content}
-							variant={message.UserID == userId ? 'sent' : 'received'}
+							variant={message.UserID == loggedUserId ? 'sent' : 'received'}
 							checked={true}
 							time={formattedTime}
 						/>

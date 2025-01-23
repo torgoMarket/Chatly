@@ -1,28 +1,14 @@
-import axios, { AxiosResponse } from 'axios'
 import { $api } from '../api'
+import { TChatList } from '../types/chatTypes'
+import { keysToCamelCaseInObjectOfArray } from '../utils/request'
 
-interface IResponse extends AxiosResponse {
-	response: {
-		status: number
-		data: {
-			error?: {
-				ConstraintName?: string
-			}
-		}
-	}
-}
-
-export const getChats = async (nickName: string) => {
+export const getChats = async (nickName: string): Promise<TChatList[]> => {
 	try {
 		const response = await $api.post('/getuser', {
 			NickName: nickName,
 		})
-
-		return response
-	} catch (error: unknown) {
-		if (axios.isAxiosError(error)) {
-			const axiosError = error as unknown as IResponse
-			return axiosError.response
-		}
+		return keysToCamelCaseInObjectOfArray(response.data) as TChatList[]
+	} catch {
+		return [] as TChatList[]
 	}
 }

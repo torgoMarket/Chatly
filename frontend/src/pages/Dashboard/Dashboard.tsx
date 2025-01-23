@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useState } from 'react'
 import { Actionbar } from '../../components/Actionbar/Actionbar'
 import { Chat } from '../../components/Chat/Chat'
 import { ChatList } from '../../components/ChatList/ChatList'
@@ -13,52 +12,21 @@ import { BurgerBtn } from '../../components/UI/BurgerBtn/BurgerBtn'
 import { Input } from '../../components/UI/Input/Input'
 import { useGetUserInfo } from '../../hooks/queries/useGetUserInfo'
 import { useCheckAuth } from '../../hooks/useCheckAuth'
+import { useSearchChat } from '../../hooks/useSearchChat'
 import { useToggle } from '../../hooks/useToggle'
-import { getChats } from '../../services/chatService'
-import useSocketStore from '../../store/socketStore'
+
 export const Dashboard = () => {
 	useCheckAuth()
 
-	const [search, setSearch] = useState<string>('')
-	const [chatList, setChatList] = useState(null)
-
-	const debounceSearch = useCallback(() => {
-		const handleSearch = async () => {
-			const response = await getChats(search)
-			if (response?.status === 200) {
-				setChatList(response.data)
-			}
-
-			if (response?.status === 400) {
-				setChatList(user?.chats)
-			}
-		}
-
-		const delayDebounceFn = setTimeout(() => {
-			if (search) {
-				handleSearch()
-			} else {
-				setChatList(user?.chats)
-			}
-		}, 1000)
-
-		return () => clearTimeout(delayDebounceFn)
-	}, [search])
-
-	const currentChat = useSocketStore(state => state.currentChat)
-
-	useEffect(() => {
-		debounceSearch()
-	}, [search, debounceSearch])
-
-	const { isOpen: isSidebarOpen, toggle: toggleSidebar } = useToggle(true)
 	const { user } = useGetUserInfo()
+	const { state: isSidebarOpen, toggle: toggleSidebar } = useToggle(true)
+	const { search, setSearch, results: searchedChatList } = useSearchChat(500)
 
 	return (
 		<Container>
 			<Actionbar>
 				<BurgerBtn isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-				<CurrentChatUserInfo seen='' name={currentChat?.name} />
+				<CurrentChatUserInfo />
 				<DeviceControl isMicOn={true} isHeadsetOn={true} />
 			</Actionbar>
 
@@ -67,19 +35,20 @@ export const Dashboard = () => {
 					<Input
 						placeholder='Search'
 						scale='lg'
+						value={search}
 						onChange={e => setSearch(e.target.value)}
 					/>
 				</Field>
 
-				<ChatList chatList={chatList} userId={user?.id} />
+				<ChatList loggedUserId={user?.id} searchedChatList={searchedChatList} />
 				<Profile
-					color={user?.color?.Name}
+					color={user?.color?.name}
 					name={user?.name}
-					nickname={user?.nickname}
+					nickname={user?.nickName}
 				/>
 			</Sidebar>
-			<Chat userId={user?.id} />
-			<TextBox userId={user?.id} />
+			<Chat loggedUserId={user?.id} />
+			<TextBox />
 		</Container>
 	)
 }
