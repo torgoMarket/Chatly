@@ -1,16 +1,21 @@
 import clsx from 'clsx'
 import { Send, Smile } from 'lucide-react'
 import React, { useRef, useState } from 'react'
-import emojiData from '../../../constants/emojiPack.js'
+import img from '../../../assets/images/avatar1.png'
+import { emojiCategories, emojis } from '../../../constants/emojiPack.ts'
+import { useChatHistory } from '../../../hooks/queries/useGetChatHistory.ts'
 import { useToggle } from '../../../hooks/useToggle'
+import useCurrentChatStore from '../../../store/currentChatStore.ts'
 import styles from './TextBox.module.scss'
-
 export const TextBox: React.FC = () => {
 	const textareaRef = useRef<HTMLTextAreaElement>(null)
 	const [message, setMessage] = useState('')
+	const socket = useCurrentChatStore(state => state.socket)
 
-	const { isOpen, toggle } = useToggle(true)
+	const { state: isEmojisOpen, toggle: toggleEmojisOpen } = useToggle(false)
 	const [activeEmojiCategory, setEmojiCategory] = useState<string>('face')
+
+	const { refetchChatHistory } = useChatHistory(8)
 
 	const handleInput = () => {
 		const textarea = textareaRef.current
@@ -25,6 +30,15 @@ export const TextBox: React.FC = () => {
 		handleInput()
 	}
 
+	const sendMessage = async () => {
+		if (!message.trim()) return
+		socket?.send(img)
+		console.log('Message sent:', message)
+
+		await refetchChatHistory()
+		setMessage('')
+	}
+
 	return (
 		<div className={styles.textBox}>
 			<textarea
@@ -33,13 +47,19 @@ export const TextBox: React.FC = () => {
 				onChange={handleChange}
 				rows={1}
 				placeholder='Message ...'
-				className={clsx(styles.textarea, isOpen && 'mb-24 border-b')}
+				className={clsx(styles.textarea, isEmojisOpen && 'mb-24 border-b')}
 			/>
-			<Smile className={clsx(styles.icon, styles.emoji)} onClick={toggle} />
-			<Send className={clsx(styles.icon, styles.send)} />
-			<div className={clsx(styles.emojiPack, isOpen && '!flex')}>
+			<Smile
+				className={clsx(styles.icon, styles.emoji)}
+				onClick={toggleEmojisOpen}
+			/>
+			<Send
+				className={clsx(styles.icon, styles.send)}
+				onClick={() => sendMessage()}
+			/>
+			<div className={clsx(styles.emojiPack, isEmojisOpen && '!flex')}>
 				<ul className={styles.emojiCategoriesList}>
-					{emojiData.emojiCategories.map((category: string) => (
+					{emojiCategories.map((category: string) => (
 						<li
 							className={clsx(
 								styles.emojiCategoriesListItem,
@@ -53,7 +73,7 @@ export const TextBox: React.FC = () => {
 					))}
 				</ul>
 				<div className={styles.emojis}>
-					{emojiData.emojis[activeEmojiCategory].map((emoji: string) => (
+					{emojis[activeEmojiCategory].map((emoji: string) => (
 						<span
 							className='cursor-pointer text-lg min-w-6'
 							key={emoji}

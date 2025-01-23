@@ -33,10 +33,10 @@
 		@apply flex flex-col gap-4 pt-8;
 
 		.settingListItem {
-			@apply w-full flex justify-between items-center;
+			@apply w-full flex gap-20 items-center;
 
 			.title {
-				@apply text-text text-lg;
+				@apply text-text text-lg w-40;
 			}
 		}
 	}

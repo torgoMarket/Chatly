@@ -1,6 +1,16 @@
 import axios, { AxiosResponse } from 'axios'
 import { $api } from '../api'
-import { TUserLogin, TUserRegister } from '../types/userTypes'
+import { TChatList } from '../types/chatTypes'
+import {
+	TUser,
+	TUserLogin,
+	TUserRecover,
+	TUserRegister,
+} from '../types/userTypes'
+import {
+	keysToCamelCaseInObject,
+	keysToCamelCaseInObjectOfArray,
+} from '../utils/request'
 
 interface IResponse extends AxiosResponse {
 	response: {
@@ -18,7 +28,8 @@ export const registerUser = async (userData: TUserRegister) => {
 		const response = await $api.post('/signup', {
 			Name: userData.name,
 			Email: userData.email,
-			password: userData.password,
+			Password: userData.password,
+			NickName: userData.nickName,
 		})
 
 		return response
@@ -45,10 +56,86 @@ export const loginUser = async (userData: TUserLogin) => {
 	}
 }
 
-export const getUserInfo = async () => {
+export const logoutUser = async (email: string) => {
 	try {
-		const response = await $api.get('/val')
-		return response.data
+		const response = await $api.post(
+			'/logout',
+			{
+				Email: email,
+			},
+			{
+				withCredentials: true,
+			}
+		)
+		return response
+	} catch (error) {
+		if (axios.isAxiosError(error)) {
+			const axiosError = error as unknown as IResponse
+			return axiosError.response
+		}
+	}
+}
+
+export const getUserInfo = async (): Promise<TUser> => {
+	try {
+		const response = await $api.get('/getuserinfo')
+		return keysToCamelCaseInObject(response.data.msg) as TUser
+	} catch {
+		return {} as TUser
+	}
+}
+
+export const sendMail = async (email: string, subject: string) => {
+	try {
+		const response = await $api.post('/sendmail', {
+			Email: email,
+			Subject: subject,
+		})
+		return response as AxiosResponse
+	} catch (error: unknown) {
+		if (axios.isAxiosError(error)) {
+			const axiosError = error as unknown as IResponse
+			return axiosError.response
+		}
+	}
+}
+
+export const checkCodeFromMail = async (recoverData: TUserRecover) => {
+	console.log(recoverData)
+	try {
+		const response = await $api.post('/recover', {
+			Email: recoverData.email,
+			Code: recoverData.code,
+			NewPassword: recoverData.newPassword,
+		})
+		return response as AxiosResponse
+	} catch (error: unknown) {
+		if (axios.isAxiosError(error)) {
+			const axiosError = error as unknown as IResponse
+			return axiosError.response
+		}
+	}
+}
+
+export const getChatsOfUser = async (): Promise<TChatList[]> => {
+	try {
+		const response = await $api.get('/ws/getchatsofuser')
+		return keysToCamelCaseInObjectOfArray(response.data) as TChatList[]
+	} catch {
+		return [] as TChatList[]
+	}
+}
+
+export const updateUser = async (user: TUser) => {
+	try {
+		const response = await $api.post('/update', {
+			Name: user.name,
+			NickName: user.nickName,
+			Email: user.email,
+			Device_hear: user.device_hear,
+			Device_voice: user.device_voice,
+		})
+		return response as AxiosResponse
 	} catch (error: unknown) {
 		if (axios.isAxiosError(error)) {
 			const axiosError = error as unknown as IResponse

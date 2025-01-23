@@ -1,5 +1,5 @@
 export const useValidate = (userData: Record<string, string>) => {
-	const { name, email, password, repeatPassword } = userData
+	const { name, nickName, email, password, repeatPassword } = userData
 
 	const error = Object.fromEntries(
 		userData && Object.keys(userData).map(field => [field, ''])
@@ -24,6 +24,10 @@ export const useValidate = (userData: Record<string, string>) => {
 	}
 
 	if (name?.length < 4) {
+		error.name = 'Minimum 4 characters'
+	}
+
+	if (nickName?.length < 4) {
 		error.name = 'Minimum 4 characters'
 	}
 
