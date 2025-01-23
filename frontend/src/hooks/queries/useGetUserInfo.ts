@@ -3,10 +3,11 @@ import { getUserInfo } from '../../services/userService'
 import { TUser } from '../../types/userTypes'
 
 export const useGetUserInfo = () => {
-	const { data: user = {} as TUser } = useQuery<TUser>({
-		queryKey: ['userInfo'],
-		queryFn: getUserInfo,
-	})
+	const { data: user = {} as TUser, refetch: refetchUserInfo } =
+		useQuery<TUser>({
+			queryKey: ['userInfo'],
+			queryFn: getUserInfo,
+		})
 
-	return { user }
+	return { user, refetchUserInfo }
 }

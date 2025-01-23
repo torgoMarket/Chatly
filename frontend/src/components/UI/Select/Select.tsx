@@ -1,19 +1,27 @@
 import { SelectHTMLAttributes } from 'react'
 import styles from './Select.module.scss'
 
+interface Option {
+	value: string
+	label: string
+}
+
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
-	options: string[]
+	options: Option[]
 }
 
 export const Select: React.FC<SelectProps> = ({ options, ...props }) => {
 	return (
 		<select className={styles.select} {...props}>
-			{options &&
-				options.map(option => (
-					<option key={option} value={option} className={styles.option}>
-						{option}
-					</option>
-				))}
+			{options.map(option => (
+				<option
+					key={option.value}
+					value={option.value}
+					className={styles.option}
+				>
+					{option.label}
+				</option>
+			))}
 		</select>
 	)
 }

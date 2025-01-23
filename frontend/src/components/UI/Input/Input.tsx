@@ -1,6 +1,7 @@
 import clsx from 'clsx'
-import { InputHTMLAttributes } from 'react'
+import React, { InputHTMLAttributes } from 'react'
 import styles from './Input.module.scss'
+
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 	scale?: 'sm' | 'md' | 'lg'
 	className?: string

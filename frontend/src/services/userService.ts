@@ -125,3 +125,21 @@ export const getChatsOfUser = async (): Promise<TChatList[]> => {
 		return [] as TChatList[]
 	}
 }
+
+export const updateUser = async (user: TUser) => {
+	try {
+		const response = await $api.post('/update', {
+			Name: user.name,
+			NickName: user.nickName,
+			Email: user.email,
+			Device_hear: user.device_hear,
+			Device_voice: user.device_voice,
+		})
+		return response as AxiosResponse
+	} catch (error: unknown) {
+		if (axios.isAxiosError(error)) {
+			const axiosError = error as unknown as IResponse
+			return axiosError.response
+		}
+	}
+}
