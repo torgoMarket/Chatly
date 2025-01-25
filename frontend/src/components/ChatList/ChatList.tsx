@@ -36,10 +36,6 @@ export const ChatList = ({
 		}
 	}, [searchedChatList])
 
-	console.log('setChatList', searchedChatList)
-
-	console.log(chatList)
-
 	return (
 		<div className={styles.chatList}>
 			{chatList ? (

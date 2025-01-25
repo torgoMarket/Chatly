@@ -41,8 +41,6 @@ export const Recover = () => {
 					code: Number(code),
 				})
 
-				console.log('response', response)
-
 				if (response?.status === 200) {
 					navigate('/login')
 				}

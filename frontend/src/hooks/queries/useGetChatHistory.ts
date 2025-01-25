@@ -1,13 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 
-/**
- * Custom hook to fetch chat history.
- * @param chatId - The ID of the chat to fetch history for.
- */
 export const useChatHistory = (chatId: number) => {
 	const fetchChatHistory = async () => {
-		console.log('1', 1)
 		const response = await axios.post(
 			'http://localhost:3000/ws/getchathistory',
 			{
