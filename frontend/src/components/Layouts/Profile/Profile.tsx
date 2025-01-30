@@ -1,6 +1,7 @@
 import { Settings } from 'lucide-react'
 
 import { useNavigate } from 'react-router-dom'
+import { Avatar } from '../../UI/Avatar/Avatar'
 import styles from './Profile.module.scss'
 
 interface ProfileProps {
@@ -14,9 +15,7 @@ export const Profile: React.FC<ProfileProps> = ({ name, color, nickname }) => {
 
 	return (
 		<div className={styles.profile}>
-			<div className={styles.avatar}>
-				<div className={styles.img}>{name && name[0].toUpperCase()}</div>
-			</div>
+			<Avatar name={name} style={{ backgroundColor: color }} />
 			<div className={styles.info}>
 				<div className={styles.name}>
 					{name && name.slice(0, 12)} {name && name.length > 12 && '...'}

@@ -6,21 +6,15 @@ import styles from './ChatList.module.scss'
 
 interface IChatListProps {
 	loggedUserId: number
+	loggedUserName: string
 	searchedChatList: TChatList[] | null
 }
 
 export const ChatList = ({
 	loggedUserId,
+	loggedUserName,
 	searchedChatList,
 }: IChatListProps) => {
-	const handleDragStart = (id: number) => {
-		console.log(`Drag started for item with id: ${id}`)
-	}
-
-	const handleDrop = (id: number) => {
-		console.log(`Item dropped on id: ${id}`)
-	}
-
 	const [chatList, setChatList] = useState<TChatList[] | null>(null)
 
 	const getUserChats = async () => {
@@ -46,11 +40,13 @@ export const ChatList = ({
 								key={chatItem.id}
 								search={searchedChatList ? true : false}
 								loggedUserId={loggedUserId}
+								loggedUserName={loggedUserName}
 								chatUserId={chatItem.id}
+								chatUser={chatItem?.receiver}
+								chatUserNickName={chatItem?.nickName}
 								name={chatItem.name}
-								lastMessage={chatItem?.lastMessage}
-								onDragStart={handleDragStart}
-								onDrop={handleDrop}
+								lastMessage={chatItem.lastMessage}
+								color={chatItem.color}
 							/>
 						)
 				)

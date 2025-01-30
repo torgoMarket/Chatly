@@ -3,6 +3,7 @@ import { create } from 'zustand'
 interface IChatUser {
 	id: number
 	name: string
+	color: string
 }
 
 interface ICurrentChatStore {

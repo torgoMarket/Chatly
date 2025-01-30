@@ -14,9 +14,10 @@ export const Message: React.FC<MessageProps> = ({
 	checked,
 	time,
 	text,
+	...props
 }) => {
 	return (
-		<div className={clsx(styles.message, styles[variant])}>
+		<div {...props} className={clsx(styles.message, styles[variant])}>
 			<div className={styles.text}>{text}</div>
 			<div className={styles.info}>
 				<div className={styles.time}>{time}</div>

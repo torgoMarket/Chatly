@@ -20,7 +20,7 @@ export const Dashboard = () => {
 
 	const { user } = useGetUserInfo()
 	const { state: isSidebarOpen, toggle: toggleSidebar } = useToggle(true)
-	const { search, setSearch, results: searchedChatList } = useSearchChat(500)
+	const { search, setSearch, results: searchedChatList } = useSearchChat(1000)
 
 	return (
 		<Container>
@@ -40,9 +40,13 @@ export const Dashboard = () => {
 					/>
 				</Field>
 
-				<ChatList loggedUserId={user?.id} searchedChatList={searchedChatList} />
+				<ChatList
+					loggedUserId={user?.id}
+					loggedUserName={user?.name}
+					searchedChatList={searchedChatList}
+				/>
 				<Profile
-					color={user?.color?.name}
+					color={user?.color}
 					name={user?.name}
 					nickname={user?.nickName}
 				/>
