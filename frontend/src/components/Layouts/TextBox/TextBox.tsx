@@ -1,7 +1,6 @@
 import clsx from 'clsx'
 import { Send, Smile } from 'lucide-react'
 import React, { useRef, useState } from 'react'
-import img from '../../../assets/images/avatar1.png'
 import { emojiCategories, emojis } from '../../../constants/emojiPack.ts'
 import { useChatHistory } from '../../../hooks/queries/useGetChatHistory.ts'
 import { useToggle } from '../../../hooks/useToggle'
@@ -15,7 +14,9 @@ export const TextBox: React.FC = () => {
 	const { state: isEmojisOpen, toggle: toggleEmojisOpen } = useToggle(false)
 	const [activeEmojiCategory, setEmojiCategory] = useState<string>('face')
 
-	const { refetchChatHistory } = useChatHistory(8)
+	const { refetchChatHistory } = useChatHistory(
+		socket?.url.split('?')[1].split('&')[0].split('=')[1]
+	)
 
 	const handleInput = () => {
 		const textarea = textareaRef.current
@@ -32,8 +33,11 @@ export const TextBox: React.FC = () => {
 
 	const sendMessage = async () => {
 		if (!message.trim()) return
-		socket?.send(img)
+		socket?.send(message)
+
 		console.log('Message sent:', message)
+
+		await new Promise(resolve => setTimeout(resolve, 300)) // Optional: Add a small delay if needed
 
 		await refetchChatHistory()
 		setMessage('')

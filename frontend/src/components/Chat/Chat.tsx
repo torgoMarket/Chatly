@@ -13,7 +13,7 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 	const socket = useCurrentChatStore(state => state.socket)
 
 	const { chatHistory, refetchChatHistory, isLoading, isError } =
-		useChatHistory(8)
+		useChatHistory(socket?.url.split('?')[1].split('&')[0].split('=')[1])
 
 	useEffect(() => {
 		if (endOfChatRef.current) {
@@ -21,6 +21,7 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 		}
 
 		if (socket) {
+			console.log('socket', socket)
 			socket.onmessage = event => {
 				const messageData = JSON.parse(event.data)
 				console.log('Received message:', messageData)
@@ -28,7 +29,7 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 				refetchChatHistory()
 			}
 		}
-	}, [socket, refetchChatHistory, chatHistory])
+	}, [socket, refetchChatHistory])
 
 	if (isLoading) return <p>Loading chat...</p>
 	if (isError) return <p>Error loading chat history.</p>
@@ -37,7 +38,8 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 		<div className={styles.chat}>
 			{chatHistory &&
 				chatHistory.map(message => {
-					const seenTime = new Date(message.CreatedAt)
+					const seenTime = new Date(message.seenTime)
+
 					const formattedTime = seenTime.toLocaleTimeString('en-US', {
 						hour: '2-digit',
 						minute: '2-digit',
@@ -46,10 +48,10 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 
 					return (
 						<Message
-							key={message.ID}
-							text={message.Content}
-							variant={message.UserID == loggedUserId ? 'sent' : 'received'}
-							checked={true}
+							key={message.id}
+							text={message.content}
+							variant={message.userId == loggedUserId ? 'sent' : 'received'}
+							checked={seenTime.toString().includes('000') ? false : true}
 							time={formattedTime}
 						/>
 					)

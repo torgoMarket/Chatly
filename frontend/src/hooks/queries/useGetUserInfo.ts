@@ -7,6 +7,7 @@ export const useGetUserInfo = () => {
 		useQuery<TUser>({
 			queryKey: ['userInfo'],
 			queryFn: getUserInfo,
+			staleTime: 10 * 60 * 1000,
 		})
 
 	return { user, refetchUserInfo }

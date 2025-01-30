@@ -1,49 +1,66 @@
-import { Check, CheckCheck, GripVertical } from 'lucide-react'
-import { useRef } from 'react'
+import { Check, CheckCheck } from 'lucide-react'
+import { $api } from '../../../api'
 import useCurrentChatStore from '../../../store/currentChatStore'
 import { TLastMessage } from '../../../types/chatTypes'
+import { Avatar } from '../../UI/Avatar/Avatar'
 import styles from './ChatListItem.module.scss'
 
 interface IChatListItemProps {
 	search: boolean
 	loggedUserId: number
+	loggedUserName: string
 	chatUserId: number
 	name: string
+	chatUserNickName: string
+	color: string
 	lastMessage: TLastMessage
-	onDragStart: (id: number) => void
-	onDrop: (id: number) => void
 }
 
 export const ChatListItem: React.FC<IChatListItemProps> = ({
 	search,
-	// loggedUserId,
+	loggedUserId,
+	loggedUserName,
 	chatUserId,
+	chatUserNickName,
 	lastMessage = {},
 	name,
-	onDragStart,
-	onDrop,
+	color,
+	chatUser,
 }) => {
-	const dragHandleRef = useRef<HTMLDivElement | null>(null)
-	// const setSocket = useCurrentChatStore(state => state.setSocket)
+	const setSocket = useCurrentChatStore(state => state.setSocket)
 	const setCurrentChat = useCurrentChatStore(state => state.setCurrentChat)
 
 	const switchChat = async () => {
-		// const response = await $api.post('/ws/createroom', {
-		// 	ID: `${
-		// 		((chatUserId + loggedUserId) * (chatUserId + loggedUserId + 1)) / 2 +
-		// 		loggedUserId
-		// 	}`,
-		// 	Name: chatUserId,
-		// })
+		const { data: rooms } = await $api.get('/ws/getrooms')
 
-		// console.log('response', response)
+		const isRoomExists = rooms?.some(element => {
+			return (
+				Number(element.Id) ===
+				(chatUserId ^ loggedUserId) + chatUserId * loggedUserId
+			)
+		})
 
-		// const socket = new WebSocket(
-		// 	`ws://localhost:3000/ws/joinroom?roomid=8&userid=${loggedUserId}&username=${chatUserId}`
-		// )
+		console.log('isRoomExists', isRoomExists)
 
-		// setSocket(socket)
-		setCurrentChat({ id: chatUserId, name })
+		if (!isRoomExists && chatUserId && chatUserNickName) {
+			const response = await $api.post('/ws/createroom', {
+				Id: (chatUserId ^ loggedUserId) + chatUserId * loggedUserId,
+				ReceiverId: chatUserId,
+				ReceiverName: chatUserNickName,
+			})
+			console.log('response', response)
+		}
+
+		const socket = new WebSocket(
+			`ws://localhost:3000/ws/joinroom?roomId=${
+				((search ? chatUserId : Number(Object.keys(chatUser)[0])) ^
+					loggedUserId) +
+				(search ? chatUserId : Number(Object.keys(chatUser)[0])) * loggedUserId
+			}&userId=${loggedUserId}`
+		)
+		console.log('socket', socket)
+		setSocket(socket)
+		setCurrentChat({ id: chatUserId, name, color })
 	}
 
 	const { content, createdAt, seenTime } = lastMessage as TLastMessage
@@ -56,30 +73,15 @@ export const ChatListItem: React.FC<IChatListItemProps> = ({
 	})
 
 	return (
-		<div
-			className={styles.chatListItem}
-			onDragOver={e => e.preventDefault()}
-			onDrop={() => onDrop(chatUserId)}
-			onClick={() => switchChat()}
-		>
-			<div
-				className={styles.dragHandle}
-				ref={dragHandleRef}
-				draggable
-				onDragStart={e => {
-					if (e.target === dragHandleRef.current) {
-						onDragStart(chatUserId)
-					} else {
-						e.preventDefault()
-					}
-				}}
-			>
-				{!search && <GripVertical className={styles.gripIcon} />}
-			</div>
+		<div className={styles.chatListItem} onClick={() => switchChat()}>
+			<div className={styles.dragHandle}></div>
+
+			<Avatar name={loggedUserName} style={{ backgroundColor: color }} />
 
 			<div className={styles.sender}>
 				<div className={styles.name}>
 					{name && name.slice(0, 9)} {name && name.length > 9 && '...'}
+					{chatUser[Object.keys(chatUser)[0]]}
 				</div>
 				{!search && (
 					<div className={styles.message}>

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.62.11",
+    "@tanstack/react-query-devtools": "^5.64.2",
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
