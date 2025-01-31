@@ -1,5 +1,5 @@
 .message {
-	@apply relative flex max-w-[70%] border border-transparent rounded-2xl p-2 pb-8;
+	@apply relative flex min-w-16 max-w-[70%] border border-transparent rounded-2xl p-2 pb-8;
 
 	.info {
 		@apply flex gap-1 absolute bottom-1 right-1 text-base;

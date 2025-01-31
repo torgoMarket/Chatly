@@ -16,3 +16,14 @@ export type TLastMessage = {
 	seenTime: Date
 	userId: number
 }
+
+export type TChatHistory = {
+	id: number
+	chatId: number
+	userId: number
+	content: string
+	createdAt: EpochTimeStamp
+	seenTime: EpochTimeStamp
+	edited: boolean
+	reply: string
+}
