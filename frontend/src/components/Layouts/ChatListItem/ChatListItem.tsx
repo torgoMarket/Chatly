@@ -76,12 +76,12 @@ export const ChatListItem: React.FC<IChatListItemProps> = ({
 		<div className={styles.chatListItem} onClick={() => switchChat()}>
 			<div className={styles.dragHandle}></div>
 
-			<Avatar name={loggedUserName} style={{ backgroundColor: color }} />
+			<Avatar name={loggedUserName} color={color} />
 
 			<div className={styles.sender}>
 				<div className={styles.name}>
 					{name && name.slice(0, 9)} {name && name.length > 9 && '...'}
-					{chatUser[Object.keys(chatUser)[0]]}
+					{chatUser && chatUser[Object.keys(chatUser)[0]]}
 				</div>
 				{!search && (
 					<div className={styles.message}>

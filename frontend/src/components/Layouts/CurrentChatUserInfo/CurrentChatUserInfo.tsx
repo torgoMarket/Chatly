@@ -7,7 +7,7 @@ export const CurrentChatUserInfo = () => {
 
 	return (
 		<div className={styles.currentChatUserInfo}>
-			<Avatar name='Amir' style={{ backgroundColor: currentChatInfo?.color }} />
+			<Avatar name='Amir' color={currentChatInfo?.color || 'black'} />
 			<div className={styles.info}>
 				<h3 className={styles.name}>{currentChatInfo?.name}</h3>
 				{/* <p className={styles.seen}>{currentChatInfo}</p> */}

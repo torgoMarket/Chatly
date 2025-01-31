@@ -15,7 +15,7 @@ export const Profile: React.FC<ProfileProps> = ({ name, color, nickname }) => {
 
 	return (
 		<div className={styles.profile}>
-			<Avatar name={name} style={{ backgroundColor: color }} />
+			<Avatar name={name} color={color} />
 			<div className={styles.info}>
 				<div className={styles.name}>
 					{name && name.slice(0, 12)} {name && name.length > 12 && '...'}

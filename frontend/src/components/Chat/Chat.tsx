@@ -13,10 +13,9 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 	const endOfChatRef = useRef<HTMLDivElement | null>(null)
 	const socket = useCurrentChatStore(state => state.socket)
 
-	const { chatHistory, refetchChatHistory, isLoading, isError } =
-		useChatHistory(
-			Number(socket?.url.split('?')[1]?.split('&')[0]?.split('=')[1] || '')
-		)
+	const { chatHistory, refetchChatHistory, isLoading } = useChatHistory(
+		Number(socket?.url.split('?')[1]?.split('&')[0]?.split('=')[1] || '')
+	)
 
 	useEffect(() => {
 		if (chatHistory) {
@@ -28,8 +27,6 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 
 	useEffect(() => {
 		if (socket) {
-			console.log('Connected socket:', socket)
-
 			const handleMessage = (event: MessageEvent) => {
 				const messageData = JSON.parse(event.data)
 				console.log('Received message:', messageData)
@@ -45,43 +42,50 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 	}, [socket, refetchChatHistory, chatHistory])
 
 	if (isLoading) return <p>Loading chat...</p>
-	if (isError) return <p>Error loading chat history.</p>
 
 	return (
 		<div className={styles.chat}>
-			{chatHistory?.map((message, index, arr) => {
-				const seenTime = message.seenTime ? new Date(message.seenTime) : null
+			{chatHistory ? (
+				chatHistory.map((message, index, arr) => {
+					const seenTime = message.seenTime ? new Date(message.seenTime) : null
 
-				const createdDates = {
-					previous: index > 0 ? new Date(arr[index - 1].createdAt) : null,
-					current: new Date(message.createdAt),
-				}
+					const createdDates = {
+						previous: index > 0 ? new Date(arr[index - 1].createdAt) : null,
+						current: new Date(message.createdAt),
+					}
 
-				const formattedTime = seenTime
-					? seenTime.toLocaleTimeString('en-US', {
-							hour: '2-digit',
-							minute: '2-digit',
-							hour12: false,
-					  })
-					: ''
+					const formattedTime = seenTime
+						? seenTime.toLocaleTimeString('en-US', {
+								hour: '2-digit',
+								minute: '2-digit',
+								hour12: false,
+						  })
+						: ''
 
-				return (
-					<Fragment key={message.id}>
-						{(!createdDates.previous ||
-							createdDates.current.toDateString() !==
-								createdDates.previous.toDateString()) && (
-							<ChatDate viewDate={createdDates.current} />
-						)}
+					return (
+						<Fragment key={message.id}>
+							{(!createdDates.previous ||
+								createdDates.current.toDateString() !==
+									createdDates.previous.toDateString()) && (
+								<ChatDate viewDate={createdDates.current} />
+							)}
 
-						<Message
-							text={message.content}
-							variant={message.userId === loggedUserId ? 'sent' : 'received'}
-							checked={seenTime ? !seenTime.toString().includes('000') : false}
-							time={formattedTime}
-						/>
-					</Fragment>
-				)
-			})}
+							<Message
+								text={message.content}
+								variant={message.userId === loggedUserId ? 'sent' : 'received'}
+								checked={
+									seenTime ? !seenTime.toString().includes('000') : false
+								}
+								time={formattedTime}
+							/>
+						</Fragment>
+					)
+				})
+			) : (
+				<div className='w-full min-h-[calc(100vh-12rem)] flex justify-center items-center'>
+					<h1 className='text-white text-2xl'>Select Chat from Chat List</h1>
+				</div>
+			)}
 			<div ref={endOfChatRef} />
 		</div>
 	)

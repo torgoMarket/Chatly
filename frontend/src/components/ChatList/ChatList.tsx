@@ -17,18 +17,20 @@ export const ChatList = ({
 }: IChatListProps) => {
 	const [chatList, setChatList] = useState<TChatList[] | null>(null)
 
-	const getUserChats = async () => {
-		const chatList = await getChatsOfUser()
-		setChatList(chatList)
-	}
-
 	useEffect(() => {
+		const getUserChats = async () => {
+			const chatList = await getChatsOfUser()
+			setChatList(chatList)
+		}
+
 		if (!searchedChatList) {
 			getUserChats()
 		} else {
 			setChatList(searchedChatList)
 		}
 	}, [searchedChatList])
+
+	console.log('chatList', chatList)
 
 	return (
 		<div className={styles.chatList}>

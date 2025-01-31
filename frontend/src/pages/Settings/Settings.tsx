@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Container } from '../../components/Container/Container'
 import { Field } from '../../components/Layouts/Field/Field'
+import { Avatar } from '../../components/UI/Avatar/Avatar'
 import { Button } from '../../components/UI/Button/Button'
 import { Input } from '../../components/UI/Input/Input'
 import { Select } from '../../components/UI/Select/Select'
@@ -58,14 +59,14 @@ export const Settings = () => {
 						className={styles.backIcon}
 					/>
 					<h1 className={styles.heading}>Settings</h1>
-
-					<div className={styles.wrapper}>
-						<div className={styles.info}>
-							<div className={styles.name}>{user.name}</div>
-							<div className={styles.tag}>{user.nickName}</div>
-						</div>
-					</div>
 				</header>
+				<div className={styles.wrapper}>
+					<Avatar name={user.name} color={user.color} className='size-10' />
+					<div className={styles.info}>
+						<div className={styles.name}>{user.name}</div>
+						<div className={styles.tag}>{user.nickName}</div>
+					</div>
+				</div>
 
 				<div className={styles.settingList}>
 					{settingsFields.map(settingField => (
