@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useChatHistory } from '../../hooks/queries/useGetChatHistory'
 import useCurrentChatStore from '../../store/currentChatStore'
+import { ChatDate } from '../Date/ChatDate'
 import { Message } from '../Layouts/Message/Message'
 import styles from './Chat.module.scss'
 
@@ -13,20 +14,28 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 	const socket = useCurrentChatStore(state => state.socket)
 
 	const { chatHistory, refetchChatHistory, isLoading, isError } =
-		useChatHistory(socket?.url.split('?')[1].split('&')[0].split('=')[1])
+		useChatHistory(
+			socket?.url.split('?')[1]?.split('&')[0]?.split('=')[1] || ''
+		)
 
 	useEffect(() => {
 		if (endOfChatRef.current) {
-			endOfChatRef.current.scrollIntoView()
+			endOfChatRef.current.scrollIntoView({ behavior: 'smooth' })
 		}
 
 		if (socket) {
-			console.log('socket', socket)
-			socket.onmessage = event => {
+			console.log('Connected socket:', socket)
+
+			const handleMessage = (event: MessageEvent) => {
 				const messageData = JSON.parse(event.data)
 				console.log('Received message:', messageData)
-
 				refetchChatHistory()
+			}
+
+			socket.addEventListener('message', handleMessage)
+
+			return () => {
+				socket.removeEventListener('message', handleMessage)
 			}
 		}
 	}, [socket, refetchChatHistory])
@@ -36,27 +45,42 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 
 	return (
 		<div className={styles.chat}>
-			{chatHistory &&
-				chatHistory.map(message => {
-					const seenTime = new Date(message.seenTime)
+			{chatHistory?.length > 0 &&
+				chatHistory.map((message, index, arr) => {
+					const seenTime = message.seenTime ? new Date(message.seenTime) : null
 
-					const formattedTime = seenTime.toLocaleTimeString('en-US', {
-						hour: '2-digit',
-						minute: '2-digit',
-						hour12: false,
-					})
+					const createdDates = {
+						previous: index > 0 ? new Date(arr[index - 1].createdAt) : null,
+						current: new Date(message.createdAt),
+					}
+
+					const formattedTime = seenTime
+						? seenTime.toLocaleTimeString('en-US', {
+								hour: '2-digit',
+								minute: '2-digit',
+								hour12: false,
+						  })
+						: ''
 
 					return (
-						<Message
-							key={message.id}
-							text={message.content}
-							variant={message.userId == loggedUserId ? 'sent' : 'received'}
-							checked={seenTime.toString().includes('000') ? false : true}
-							time={formattedTime}
-						/>
+						<>
+							{(!createdDates.previous ||
+								createdDates.current.toDateString() !==
+									createdDates.previous.toDateString()) && (
+								<ChatDate viewDate={createdDates.current} />
+							)}
+
+							<Message
+								text={message.content}
+								variant={message.userId === loggedUserId ? 'sent' : 'received'}
+								checked={
+									seenTime ? !seenTime.toString().includes('000') : false
+								}
+								time={formattedTime}
+							/>
+						</>
 					)
 				})}
-
 			<div ref={endOfChatRef} />
 		</div>
 	)
