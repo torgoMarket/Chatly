@@ -1,6 +1,2 @@
-<<<<<<< Updated upstream
-*.env
-=======
 .env
 frontend/node_modules/
->>>>>>> Stashed changes

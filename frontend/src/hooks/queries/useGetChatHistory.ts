@@ -3,10 +3,10 @@ import { $api } from '../../api'
 import { TChatHistory } from '../../types/chatTypes'
 import { keysToCamelCaseInObjectOfArray } from '../../utils/request'
 
-export const useChatHistory = (chatId: number) => {
+export const useChatHistory = (chatId: string) => {
 	const fetchChatHistory = async () => {
 		const response = await $api.post('/ws/getchathistory', {
-			chatId: chatId,
+			chatId: Number(chatId),
 			limit: -1,
 			offset: -1,
 		})

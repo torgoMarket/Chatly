@@ -43,12 +43,8 @@ export const ChatList = ({
 								search={searchedChatList ? true : false}
 								loggedUserId={loggedUserId}
 								loggedUserName={loggedUserName}
-								chatUserId={chatItem.id}
-								chatUser={chatItem?.receiver}
-								chatUserNickName={chatItem?.nickName}
-								name={chatItem.name}
-								lastMessage={chatItem.lastMessage}
-								color={chatItem.color}
+								chatUser={chatItem?.user}
+								lastMessage={chatItem?.lastMessage}
 							/>
 						)
 				)

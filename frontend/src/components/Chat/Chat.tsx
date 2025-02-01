@@ -14,7 +14,7 @@ export const Chat = ({ loggedUserId }: IChatProps) => {
 	const socket = useCurrentChatStore(state => state.socket)
 
 	const { chatHistory, refetchChatHistory, isLoading } = useChatHistory(
-		Number(socket?.url.split('?')[1]?.split('&')[0]?.split('=')[1] || '')
+		socket?.url.split('?')[1]?.split('&')[0]?.split('=')[1] || ''
 	)
 
 	useEffect(() => {

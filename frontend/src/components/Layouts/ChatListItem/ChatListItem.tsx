@@ -2,6 +2,8 @@ import { Check, CheckCheck } from 'lucide-react'
 import { $api } from '../../../api'
 import useCurrentChatStore from '../../../store/currentChatStore'
 import { TLastMessage } from '../../../types/chatTypes'
+import { TUser } from '../../../types/userTypes'
+import { keysToCamelCaseInObjectOfArray } from '../../../utils/request'
 import { Avatar } from '../../UI/Avatar/Avatar'
 import styles from './ChatListItem.module.scss'
 
@@ -9,10 +11,7 @@ interface IChatListItemProps {
 	search: boolean
 	loggedUserId: number
 	loggedUserName: string
-	chatUserId: number
-	name: string
-	chatUserNickName: string
-	color: string
+	chatUser: TUser
 	lastMessage: TLastMessage
 }
 
@@ -20,47 +19,46 @@ export const ChatListItem: React.FC<IChatListItemProps> = ({
 	search,
 	loggedUserId,
 	loggedUserName,
-	chatUserId,
-	chatUserNickName,
-	lastMessage = {},
-	name,
-	color,
 	chatUser,
+	lastMessage = {},
 }) => {
 	const setSocket = useCurrentChatStore(state => state.setSocket)
+	const storedSocket = useCurrentChatStore(state => state.socket)
 	const setCurrentChat = useCurrentChatStore(state => state.setCurrentChat)
 
 	const switchChat = async () => {
-		const { data: rooms } = await $api.get('/ws/getrooms')
+		storedSocket?.close()
+		const { data } = (await $api.get('/ws/getrooms')) as {
+			data: { id: number }[]
+		}
+		const rooms = keysToCamelCaseInObjectOfArray(data)
 
 		const isRoomExists = rooms?.some(element => {
 			return (
-				Number(element.Id) ===
-				(chatUserId ^ loggedUserId) + chatUserId * loggedUserId
+				Number(element.id) ===
+				(chatUser?.id ^ loggedUserId) + chatUser?.id * loggedUserId
 			)
 		})
 
 		console.log('isRoomExists', isRoomExists)
 
-		if (!isRoomExists && chatUserId && chatUserNickName) {
+		if (!isRoomExists && chatUser.id && chatUser.nickName) {
 			const response = await $api.post('/ws/createroom', {
-				Id: (chatUserId ^ loggedUserId) + chatUserId * loggedUserId,
-				ReceiverId: chatUserId,
-				ReceiverName: chatUserNickName,
+				Id: (chatUser.id ^ loggedUserId) + chatUser.id * loggedUserId,
+				ReceiverId: chatUser.id,
+				ReceiverName: chatUser.nickName,
 			})
 			console.log('response', response)
 		}
 
 		const socket = new WebSocket(
 			`ws://localhost:3000/ws/joinroom?roomId=${
-				((search ? chatUserId : Number(Object.keys(chatUser)[0])) ^
-					loggedUserId) +
-				(search ? chatUserId : Number(Object.keys(chatUser)[0])) * loggedUserId
+				(chatUser.id ^ loggedUserId) + chatUser.id * loggedUserId
 			}&userId=${loggedUserId}`
 		)
 		console.log('socket', socket)
 		setSocket(socket)
-		setCurrentChat({ id: chatUserId, name, color })
+		setCurrentChat(chatUser)
 	}
 
 	const { content, createdAt, seenTime } = lastMessage as TLastMessage
@@ -76,12 +74,12 @@ export const ChatListItem: React.FC<IChatListItemProps> = ({
 		<div className={styles.chatListItem} onClick={() => switchChat()}>
 			<div className={styles.dragHandle}></div>
 
-			<Avatar name={loggedUserName} color={color} />
+			<Avatar name={loggedUserName} color={chatUser.color} />
 
 			<div className={styles.sender}>
 				<div className={styles.name}>
-					{name && name.slice(0, 9)} {name && name.length > 9 && '...'}
-					{chatUser && chatUser[Object.keys(chatUser)[0]]}
+					{chatUser.name && chatUser.name.slice(0, 9)}{' '}
+					{chatUser.name && chatUser.name.length > 9 && '...'}
 				</div>
 				{!search && (
 					<div className={styles.message}>

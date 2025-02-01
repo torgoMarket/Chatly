@@ -1,9 +1,12 @@
+import { TUser } from './userTypes'
+
 export type TChatList = {
 	id: number
 	name: string
 	color: string
 	nickName: string
 	lastMessage: TLastMessage
+	user: TUser
 }
 
 export type TLastMessage = {
