@@ -15,7 +15,7 @@ export const TextBox: React.FC = () => {
 	const [activeEmojiCategory, setEmojiCategory] = useState<string>('face')
 
 	const { refetchChatHistory } = useChatHistory(
-		socket?.url.split('?')[1].split('&')[0].split('=')[1]
+		socket?.url.split('?')[1].split('&')[0].split('=')[1] || '0'
 	)
 
 	const handleInput = () => {

@@ -17,18 +17,20 @@ export const ChatList = ({
 }: IChatListProps) => {
 	const [chatList, setChatList] = useState<TChatList[] | null>(null)
 
-	const getUserChats = async () => {
-		const chatList = await getChatsOfUser()
-		setChatList(chatList)
-	}
-
 	useEffect(() => {
+		const getUserChats = async () => {
+			const chatList = await getChatsOfUser()
+			setChatList(chatList)
+		}
+
 		if (!searchedChatList) {
 			getUserChats()
 		} else {
 			setChatList(searchedChatList)
 		}
 	}, [searchedChatList])
+
+	console.log('chatList', chatList)
 
 	return (
 		<div className={styles.chatList}>
@@ -41,12 +43,8 @@ export const ChatList = ({
 								search={searchedChatList ? true : false}
 								loggedUserId={loggedUserId}
 								loggedUserName={loggedUserName}
-								chatUserId={chatItem.id}
-								chatUser={chatItem?.receiver}
-								chatUserNickName={chatItem?.nickName}
-								name={chatItem.name}
-								lastMessage={chatItem.lastMessage}
-								color={chatItem.color}
+								chatUser={chatItem?.user}
+								lastMessage={chatItem?.lastMessage}
 							/>
 						)
 				)

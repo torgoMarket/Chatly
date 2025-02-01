@@ -1,0 +1,23 @@
+.message {
+	@apply relative flex min-w-16 max-w-[70%] border border-transparent rounded-2xl p-2 pb-8;
+
+	.info {
+		@apply flex gap-1 absolute bottom-1 right-1 text-base;
+
+		.time {
+			@apply text-secondaryText text-xs;
+		}
+
+		.checked {
+			@apply size-4 text-blue-400;
+		}
+	}
+}
+
+.received {
+	@apply text-text self-start rounded-tl-sm;
+}
+
+.sent {
+	@apply bg-primary text-text self-end rounded-tr-sm;
+}

@@ -14,7 +14,7 @@
 	}
 
 	.wrapper {
-		@apply flex gap-6;
+		@apply flex gap-6 items-center;
 
 		.info {
 			@apply flex flex-col pt-2 gap-2;
