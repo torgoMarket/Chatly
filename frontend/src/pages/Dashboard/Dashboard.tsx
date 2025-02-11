@@ -3,17 +3,19 @@ import { Chat } from '../../components/Chat/Chat'
 import { ChatList } from '../../components/ChatList/ChatList'
 import { Container } from '../../components/Container/Container'
 import { CurrentChatUserInfo } from '../../components/Layouts/CurrentChatUserInfo/CurrentChatUserInfo'
-import { DeviceControl } from '../../components/Layouts/DeviceControl/DeviceControl'
+
 import { Field } from '../../components/Layouts/Field/Field'
 import { Profile } from '../../components/Layouts/Profile/Profile'
 import { TextBox } from '../../components/Layouts/TextBox/TextBox'
 import { Sidebar } from '../../components/Sidebar/Sidebar'
 import { BurgerBtn } from '../../components/UI/BurgerBtn/BurgerBtn'
 import { Input } from '../../components/UI/Input/Input'
+import { ThemeSelector } from '../../components/UI/ThemeSelector/ThemeSelector'
 import { useGetUserInfo } from '../../hooks/queries/useGetUserInfo'
 import { useCheckAuth } from '../../hooks/useCheckAuth'
 import { useSearchChat } from '../../hooks/useSearchChat'
 import { useToggle } from '../../hooks/useToggle'
+import useCurrentChatStore from '../../store/currentChatStore'
 
 export const Dashboard = () => {
 	useCheckAuth()
@@ -21,13 +23,14 @@ export const Dashboard = () => {
 	const { user } = useGetUserInfo()
 	const { state: isSidebarOpen, toggle: toggleSidebar } = useToggle(true)
 	const { search, setSearch, results: searchedChatList } = useSearchChat(1000)
+	const currentChat = useCurrentChatStore(state => state.currentChatInfo)
 
 	return (
 		<Container>
 			<Actionbar>
 				<BurgerBtn isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 				<CurrentChatUserInfo />
-				<DeviceControl isMicOn={true} isHeadsetOn={true} />
+				<ThemeSelector />
 			</Actionbar>
 
 			<Sidebar isOpen={isSidebarOpen}>
@@ -44,6 +47,7 @@ export const Dashboard = () => {
 					loggedUserId={user?.id}
 					loggedUserName={user?.name}
 					searchedChatList={searchedChatList}
+					toggleSidebar={toggleSidebar}
 				/>
 				<Profile
 					color={user?.color}
@@ -51,8 +55,12 @@ export const Dashboard = () => {
 					nickname={user?.nickName}
 				/>
 			</Sidebar>
-			<Chat loggedUserId={user?.id} />
-			<TextBox />
+			{currentChat && (
+				<>
+					<Chat loggedUserId={user?.id} />
+					<TextBox />
+				</>
+			)}
 		</Container>
 	)
 }
