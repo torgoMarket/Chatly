@@ -8,12 +8,13 @@ interface IChatListProps {
 	loggedUserId: number
 	loggedUserName: string
 	searchedChatList: TChatList[] | null
+	toggleSidebar: () => void
 }
 
 export const ChatList = ({
 	loggedUserId,
-	loggedUserName,
 	searchedChatList,
+	toggleSidebar,
 }: IChatListProps) => {
 	const [chatList, setChatList] = useState<TChatList[] | null>(null)
 
@@ -30,8 +31,6 @@ export const ChatList = ({
 		}
 	}, [searchedChatList])
 
-	console.log('chatList', chatList)
-
 	return (
 		<div className={styles.chatList}>
 			{chatList ? (
@@ -42,9 +41,9 @@ export const ChatList = ({
 								key={chatItem.id}
 								search={searchedChatList ? true : false}
 								loggedUserId={loggedUserId}
-								loggedUserName={loggedUserName}
-								chatUser={chatItem?.user}
+								chatUser={searchedChatList ? chatItem : chatItem?.user}
 								lastMessage={chatItem?.lastMessage}
+								toggleSidebar={toggleSidebar}
 							/>
 						)
 				)

@@ -22,7 +22,7 @@ export const useChatHistory = (chatId: string) => {
 		queryKey: ['chatHistory', chatId],
 		queryFn: fetchChatHistory,
 		retry: false,
-		refetchInterval: 1000 * 60,
+		refetchInterval: 1000 * 10,
 	})
 
 	return {

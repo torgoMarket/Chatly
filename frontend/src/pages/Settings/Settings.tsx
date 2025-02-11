@@ -6,9 +6,7 @@ import { Field } from '../../components/Layouts/Field/Field'
 import { Avatar } from '../../components/UI/Avatar/Avatar'
 import { Button } from '../../components/UI/Button/Button'
 import { Input } from '../../components/UI/Input/Input'
-import { Select } from '../../components/UI/Select/Select'
 import { useGetUserInfo } from '../../hooks/queries/useGetUserInfo'
-import useAudioDevices from '../../hooks/useAudioDevices'
 import { useCheckAuth } from '../../hooks/useCheckAuth'
 import { useDebounce } from '../../hooks/useDebounce'
 import { logoutUser, updateUser } from '../../services/userService'
@@ -23,8 +21,6 @@ export const Settings = () => {
 
 	const { user, refetchUserInfo } = useGetUserInfo()
 	const [userData, setUserData] = useState<TUser>({} as TUser)
-
-	const { audioInputDevices, audioOutputDevices } = useAudioDevices()
 
 	const debouncedUser = useDebounce(userData, 500)
 
@@ -70,7 +66,7 @@ export const Settings = () => {
 
 				<div className={styles.settingList}>
 					{settingsFields.map(settingField => (
-						<div className={styles.settingListItem}>
+						<div key={settingField} className={styles.settingListItem}>
 							<div className={styles.title}>{settingField}</div>
 							<Field>
 								<Input
@@ -88,40 +84,6 @@ export const Settings = () => {
 							</Field>
 						</div>
 					))}
-
-					<div className={styles.settingListItem}>
-						<div className={styles.title}>Device Headset</div>
-						<Select
-							options={audioOutputDevices.map(device => ({
-								value: device.deviceId,
-								label: device.label || 'Unknown Device',
-							}))}
-							value={userData.device_hear || ''}
-							onChange={e =>
-								setUserData({
-									...userData,
-									device_hear: e.target.value,
-								})
-							}
-						/>
-					</div>
-
-					<div className={styles.settingListItem}>
-						<div className={styles.title}>Device Micro</div>
-						<Select
-							options={audioInputDevices.map(device => ({
-								value: device.deviceId,
-								label: device.label || 'Unknown Device',
-							}))}
-							value={userData.device_voice || ''}
-							onChange={e =>
-								setUserData({
-									...userData,
-									device_voice: e.target.value,
-								})
-							}
-						/>
-					</div>
 
 					<Button className='bg-error text-white w-24 h-8' onClick={logout}>
 						Logout

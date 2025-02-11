@@ -1,0 +1,19 @@
+.currentChatUserInfo {
+	@apply flex items-center ml-auto;
+
+	img {
+		@apply w-10 h-10 rounded-full;
+	}
+
+	.info {
+		@apply ml-4;
+
+		.name {
+			@apply text-lg font-semibold text-text;
+		}
+
+		.seen {
+			@apply text-xs text-secondaryText;
+		}
+	}
+}

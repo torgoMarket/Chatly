@@ -16,7 +16,6 @@ const months = new Map([
 ])
 
 export const ChatDate = ({ viewDate }: { viewDate: Date }) => {
-	console.log('viewDate', viewDate)
 	return (
 		<div className={styles.date}>
 			{viewDate.getDate()} {months.get(String(viewDate.getMonth()))}

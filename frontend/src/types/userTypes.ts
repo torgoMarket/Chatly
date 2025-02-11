@@ -8,6 +8,7 @@ export type TUser = {
 	device_voice: string
 	isActivated: boolean
 	color: string
+	theme: 'light' | 'dark'
 }
 
 export type TUserRegister = Pick<TUser, 'name' | 'email' | 'nickName'> & {
