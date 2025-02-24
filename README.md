@@ -2,15 +2,6 @@
 
 Chatly is a real-time chat application built using **React.js** for the frontend and **Golang** for the backend. It utilizes **WebSockets** for instant messaging and integrates with **PostgreSQL** for database management. The application supports user search, theme selection, profile customization, and mobile adaptation.
 
-## 📖 Table of Contents
-- [✨ Features](#features)
-- [🛠 Technologies Used](#technologies-used)
-- [🔧 Installation](#installation)
-  - [Frontend Setup](#frontend-setup)
-  - [Backend Setup](#backend-setup)
-  - [Database Setup](#database-setup)
-- [🚀 Usage](#usage)
-
 ## ✨ Features
 - 🔍 **[User Search](#features)** - Find users in the system and start chatting instantly.
 - 💬 **[Real-Time Chat](#features)** - Instant messaging powered by **WebSockets**.
